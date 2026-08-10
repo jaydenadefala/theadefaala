@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #08090b;
+  --bg-soft: #0f1113;
+  --fg: #f4f1ea;
+  --fg-muted: #a7a49c;
+  --accent: #c9a24b; /* warm gold — preacher/gravitas */
+  --highlight: #8fa896; /* soft sage — ties to the portrait */
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

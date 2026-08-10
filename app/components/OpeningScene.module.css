@@ -1,0 +1,196 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+      120% 90% at 50% 38%,
+      rgba(201, 162, 75, 0.1) 0%,
+      rgba(8, 9, 11, 0) 60%
+    ),
+    var(--bg);
+}
+
+.hero::before {
+  /* faint atmospheric haze, not a texture image — keeps load light */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    60% 50% at 82% 78%,
+    rgba(143, 168, 150, 0.08),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 5vw, 4.5rem);
+  width: min(1100px, 92vw);
+  perspective: 1400px;
+  opacity: 0;
+}
+
+.dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 24px 6px rgba(201, 162, 75, 0.55);
+  will-change: transform, opacity;
+}
+
+.photoWrap {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(200px, 34vw, 340px);
+  aspect-ratio: 3 / 4;
+  border-radius: 999px;
+  overflow: hidden;
+  clip-path: circle(0% at 50% 50%);
+  opacity: 0;
+  will-change: transform, clip-path, opacity;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoFallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  color: var(--bg);
+  background: linear-gradient(155deg, var(--accent), var(--highlight));
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  text-align: left;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.letter {
+  display: inline-block;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.06em;
+  margin-left: 0.08em;
+  background: var(--accent);
+  opacity: 0;
+}
+
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.5rem, 1.6vw, 1rem);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  letter-spacing: 0.02em;
+  color: var(--fg-muted);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.6vw, 1rem);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.label span {
+  color: var(--fg);
+}
+
+.label:not(:last-child)::after {
+  content: "";
+  width: 4px;
+  height: 4px;
+  margin-left: clamp(0.5rem, 1.6vw, 1rem);
+  border-radius: 50%;
+  background: var(--highlight);
+}
+
+.scrollCue {
+  position: absolute;
+  bottom: clamp(1.25rem, 4vh, 2.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  opacity: 0;
+}
+
+.scrollLine {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(var(--fg-muted), transparent);
+}
+
+/* Mobile: stack vertically, drop the horizontal shift, keep the sequence */
+@media (max-width: 767px) {
+  .stage {
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .identity {
+    align-items: center;
+    text-align: center;
+  }
+
+  .name {
+    white-space: normal;
+  }
+
+  .labels {
+    justify-content: center;
+  }
+}
