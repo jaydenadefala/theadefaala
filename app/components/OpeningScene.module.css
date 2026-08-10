@@ -57,12 +57,12 @@
   flex: 0 0 auto;
   width: clamp(200px, 34vw, 340px);
   aspect-ratio: 3 / 4;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   overflow: hidden;
   clip-path: circle(0% at 50% 50%);
   opacity: 0;
   will-change: transform, clip-path, opacity;
-  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+  box-shadow: var(--shadow-3);
 }
 
 .photo {

@@ -52,19 +52,20 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.9rem 1.8rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   color: var(--bg);
   font-family: var(--font-sans);
   font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
 }
 
 .primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px -10px rgba(201, 162, 75, 0.55);
+  box-shadow: var(--glow-accent);
 }
 
 .secondary {

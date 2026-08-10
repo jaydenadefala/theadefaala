@@ -1,12 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useLayoutEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
+import { useScrollReveal } from "@/lib/motion/useScrollReveal";
+import { getReducedMotionNow } from "@/lib/motion/useReducedMotion";
 import styles from "./WritingChapter.module.css";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function WritingChapter() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -15,42 +13,16 @@ export default function WritingChapter() {
   const teaserRef = useRef<HTMLParagraphElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    const ctx = gsap.context(() => {
-      if (reduceMotion) return;
-
-      gsap.fromTo(
-        [kickerRef.current, headlineRef.current, teaserRef.current, actionsRef.current],
-        { autoAlpha: 0, y: 24 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          stagger: 0.12,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 70%",
-            once: true,
-          },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  useScrollReveal(
+    sectionRef,
+    [kickerRef, headlineRef, teaserRef, actionsRef],
+    { duration: 0.8 }
+  );
 
   const handleContinue = () => {
     const next = document.getElementById("development");
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
     next?.scrollIntoView({
-      behavior: reduceMotion ? "auto" : "smooth",
+      behavior: getReducedMotionNow() ? "auto" : "smooth",
       block: "start",
     });
   };

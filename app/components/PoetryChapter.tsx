@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { EASE } from "@/lib/motion/tokens";
+import { getReducedMotionNow } from "@/lib/motion/useReducedMotion";
 import styles from "./PoetryChapter.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -23,12 +25,8 @@ export default function PoetryChapter() {
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   useLayoutEffect(() => {
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
     const ctx = gsap.context(() => {
-      if (reduceMotion) return;
+      if (getReducedMotionNow()) return;
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -36,7 +34,7 @@ export default function PoetryChapter() {
           start: "top 65%",
           once: true,
         },
-        defaults: { ease: "power2.out" },
+        defaults: { ease: EASE.soft },
       });
 
       tl.fromTo(

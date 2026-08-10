@@ -55,7 +55,7 @@
 .card {
   position: relative;
   padding: clamp(1.75rem, 3vw, 2.5rem);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   background: linear-gradient(
     155deg,
     rgba(244, 241, 234, 0.06),
@@ -107,7 +107,7 @@
   letter-spacing: 0.02em;
   color: var(--fg-muted);
   padding: 0.3rem 0.65rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(244, 241, 234, 0.12);
 }
 

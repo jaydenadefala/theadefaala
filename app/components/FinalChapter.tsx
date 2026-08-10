@@ -1,12 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useLayoutEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
+import { useScrollReveal } from "@/lib/motion/useScrollReveal";
 import styles from "./FinalChapter.module.css";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function FinalChapter() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -15,34 +12,11 @@ export default function FinalChapter() {
   const actionsRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    const ctx = gsap.context(() => {
-      if (reduceMotion) return;
-
-      gsap.fromTo(
-        [kickerRef.current, headlineRef.current, actionsRef.current, footerRef.current],
-        { autoAlpha: 0, y: 24 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          stagger: 0.12,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 70%",
-            once: true,
-          },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  useScrollReveal(
+    sectionRef,
+    [kickerRef, headlineRef, actionsRef, footerRef],
+    { duration: 0.8 }
+  );
 
   return (
     <section

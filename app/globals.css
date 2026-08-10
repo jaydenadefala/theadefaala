@@ -1,12 +1,57 @@
 @import "tailwindcss";
 
 :root {
+  /* Color */
   --bg: #08090b;
   --bg-soft: #0f1113;
+  --bg-deep: #050506; /* Preacher-register near-black */
   --fg: #f4f1ea;
   --fg-muted: #a7a49c;
   --accent: #c9a24b; /* warm gold — preacher/gravitas */
   --highlight: #8fa896; /* soft sage — ties to the portrait */
+
+  /* Spacing scale (mirrors clamp() usage across chapters) */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 5rem;
+  --space-3xl: 8rem;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Depth (shadow) — read as "how far off the surface" */
+  --shadow-1: 0 4px 12px -4px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 12px 30px -10px rgba(0, 0, 0, 0.55);
+  --shadow-3: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+  --glow-accent: 0 12px 30px -10px rgba(201, 162, 75, 0.55);
+
+  /* Z-index layers — the 3D canvas sits behind readable DOM content */
+  --z-canvas: 0;
+  --z-content: 10;
+  --z-nav: 100;
+  --z-overlay: 200;
+
+  /* Duration (seconds) — mirrors lib/motion/tokens.ts DURATION */
+  --duration-instant: 0.15s;
+  --duration-fast: 0.3s;
+  --duration-base: 0.6s;
+  --duration-slow: 0.9s;
+  --duration-slower: 1.4s;
+
+  /* Easing — CSS cubic-bezier approximations of the GSAP eases in
+     lib/motion/tokens.ts EASE, for plain CSS transitions (hovers) that
+     don't go through GSAP. Feel-matched, not bit-identical. */
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-gentle: cubic-bezier(0.5, 1, 0.89, 1);
 }
 
 @theme inline {

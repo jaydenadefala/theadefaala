@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { DESKTOP_QUERY, REDUCED_MOTION_QUERY } from "@/lib/motion/tokens";
 import styles from "./OpeningScene.module.css";
 
 const NAME = "theAdefala";
@@ -40,10 +41,8 @@ export default function OpeningScene() {
   labelRefs.current = [];
 
   useLayoutEffect(() => {
-    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const isDesktop = window.matchMedia(DESKTOP_QUERY).matches;
+    const reduceMotion = window.matchMedia(REDUCED_MOTION_QUERY).matches;
 
     const ctxCleanups: Array<() => void> = [];
 

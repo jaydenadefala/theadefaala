@@ -1,12 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useLayoutEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
+import { useScrollReveal } from "@/lib/motion/useScrollReveal";
 import styles from "./DevelopmentChapter.module.css";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const TRACKS = [
   {
@@ -32,68 +29,22 @@ export default function DevelopmentChapter() {
 
   cardRefs.current = [];
 
-  useLayoutEffect(() => {
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+  useScrollReveal(sectionRef, [kickerRef, headlineRef], { duration: 0.8 });
 
-    const ctx = gsap.context(() => {
-      if (reduceMotion) return;
+  useScrollReveal(sectionRef, cardRefs, {
+    start: "top 55%",
+    stagger: 0.15,
+    duration: 0.9,
+    y: 40,
+    from: { rotateX: 6 },
+    to: { rotateX: 0 },
+  });
 
-      gsap.fromTo(
-        [kickerRef.current, headlineRef.current],
-        { autoAlpha: 0, y: 24 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          stagger: 0.12,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 70%",
-            once: true,
-          },
-        }
-      );
-
-      gsap.fromTo(
-        cardRefs.current,
-        { autoAlpha: 0, y: 40, rotateX: 6 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          rotateX: 0,
-          duration: 0.9,
-          ease: "power3.out",
-          stagger: 0.15,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 55%",
-            once: true,
-          },
-        }
-      );
-
-      gsap.fromTo(
-        footerRef.current,
-        { autoAlpha: 0, y: 16 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.7,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 30%",
-            once: true,
-          },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  useScrollReveal(sectionRef, [footerRef], {
+    start: "top 30%",
+    duration: 0.7,
+    y: 16,
+  });
 
   return (
     <section

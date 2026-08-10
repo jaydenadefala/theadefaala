@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { EASE } from "@/lib/motion/tokens";
+import { getReducedMotionNow } from "@/lib/motion/useReducedMotion";
 import styles from "./PreacherChapter.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -17,12 +19,8 @@ export default function PreacherChapter() {
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   useLayoutEffect(() => {
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
     const ctx = gsap.context(() => {
-      if (reduceMotion) return;
+      if (getReducedMotionNow()) return;
 
       gsap.timeline({
         scrollTrigger: {
@@ -30,7 +28,7 @@ export default function PreacherChapter() {
           start: "top 60%",
           once: true,
         },
-        defaults: { ease: "power1.out", duration: 1.1 },
+        defaults: { ease: EASE.gentle, duration: 1.1 },
       })
         .to(kickerRef.current, { autoAlpha: 1 })
         .to(ruleRef.current, { autoAlpha: 1 }, "-=0.6")
