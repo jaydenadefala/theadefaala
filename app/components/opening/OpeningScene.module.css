@@ -1,0 +1,12 @@
+.canvasHost {
+  position: relative;
+  min-height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  background: radial-gradient(
+      120% 90% at 50% 38%,
+      rgba(201, 162, 75, 0.1) 0%,
+      rgba(8, 9, 11, 0) 60%
+    ),
+    var(--bg);
+}

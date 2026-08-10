@@ -1,4 +1,4 @@
-import OpeningScene from "./components/OpeningScene";
+import OpeningScene from "./components/opening/OpeningScene";
 import WritingChapter from "./components/WritingChapter";
 import DevelopmentChapter from "./components/DevelopmentChapter";
 import PoetryChapter from "./components/PoetryChapter";

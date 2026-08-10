@@ -3,13 +3,18 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { DESKTOP_QUERY, REDUCED_MOTION_QUERY } from "@/lib/motion/tokens";
-import styles from "./OpeningScene.module.css";
+import { IdentityOverlay, ScrollCue } from "./IdentityOverlay";
+import styles from "./OpeningSceneFallback.module.css";
 
-const NAME = "theAdefala";
-const ROLES = ["Developer", "Writer", "Poet", "Preacher"];
 const PHOTO_SRC = "/images/hero.jpg";
 
-export default function OpeningScene() {
+/**
+ * Pure DOM/CSS opening sequence — the Scene fallback for devices without
+ * real WebGL and for prefers-reduced-motion. This is the original
+ * Milestone-phase-1 implementation, unchanged in behavior; only the
+ * name/label markup now comes from the shared IdentityOverlay.
+ */
+export default function OpeningSceneFallback() {
   const stageRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const photoWrapRef = useRef<HTMLDivElement>(null);
@@ -36,9 +41,6 @@ export default function OpeningScene() {
       cancelled = true;
     };
   }, []);
-
-  letterRefs.current = [];
-  labelRefs.current = [];
 
   useLayoutEffect(() => {
     const isDesktop = window.matchMedia(DESKTOP_QUERY).matches;
@@ -190,58 +192,14 @@ export default function OpeningScene() {
           )}
         </div>
 
-        <div className={styles.identity}>
-          <h1 className={styles.name}>
-            <span aria-hidden="true">
-              {NAME.split("").map((char, i) => (
-                <span
-                  key={i}
-                  className={styles.letter}
-                  ref={(el) => {
-                    if (el) letterRefs.current.push(el);
-                  }}
-                >
-                  {char === " " ? " " : char}
-                </span>
-              ))}
-              <span ref={cursorRef} className={styles.cursor}>
-                &nbsp;
-              </span>
-            </span>
-            <span
-              className="sr-only"
-              style={{
-                position: "absolute",
-                width: 1,
-                height: 1,
-                overflow: "hidden",
-                clip: "rect(0 0 0 0)",
-              }}
-            >
-              {NAME}
-            </span>
-          </h1>
-
-          <ul className={styles.labels}>
-            {ROLES.map((role) => (
-              <li
-                key={role}
-                className={styles.label}
-                ref={(el) => {
-                  if (el) labelRefs.current.push(el);
-                }}
-              >
-                <span>{role}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <IdentityOverlay
+          letterRefs={letterRefs}
+          labelRefs={labelRefs}
+          cursorRef={cursorRef}
+        />
       </div>
 
-      <div ref={scrollCueRef} className={styles.scrollCue}>
-        Scroll
-        <span className={styles.scrollLine} aria-hidden="true" />
-      </div>
+      <ScrollCue scrollCueRef={scrollCueRef} />
     </section>
   );
 }
