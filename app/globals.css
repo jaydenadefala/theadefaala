@@ -5,6 +5,12 @@
   --bg: #08090b;
   --bg-soft: #0f1113;
   --bg-deep: #050506; /* Preacher-register near-black */
+  /* Translucent counterparts — used where a chapter should let the
+     persistent ChapterWorld particle layer read through as shared
+     texture instead of fully occluding it. Preacher deliberately does
+     NOT use these: its opacity is the point, not an oversight. */
+  --bg-translucent: rgba(8, 9, 11, 0.92);
+  --bg-soft-translucent: rgba(15, 17, 19, 0.9);
   --fg: #f4f1ea;
   --fg-muted: #a7a49c;
   --accent: #c9a24b; /* warm gold — preacher/gravitas */

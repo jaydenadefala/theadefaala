@@ -1,0 +1,15 @@
+.container {
+  position: relative;
+}
+
+.canvasHost {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-canvas);
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  z-index: var(--z-content);
+}

@@ -1,4 +1,6 @@
 import OpeningScene from "./components/opening/OpeningScene";
+import ChapterWorld from "./components/ChapterWorld";
+import ChapterRail from "./components/ChapterRail";
 import WritingChapter from "./components/WritingChapter";
 import DevelopmentChapter from "./components/DevelopmentChapter";
 import PoetryChapter from "./components/PoetryChapter";
@@ -9,11 +11,14 @@ export default function Home() {
   return (
     <main id="top" className="flex flex-1 flex-col">
       <OpeningScene />
-      <WritingChapter />
-      <DevelopmentChapter />
-      <PoetryChapter />
-      <PreacherChapter />
-      <FinalChapter />
+      <ChapterRail />
+      <ChapterWorld>
+        <WritingChapter />
+        <DevelopmentChapter />
+        <PoetryChapter />
+        <PreacherChapter />
+        <FinalChapter />
+      </ChapterWorld>
     </main>
   );
 }

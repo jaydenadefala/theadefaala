@@ -7,10 +7,10 @@
   padding: clamp(4rem, 12vh, 8rem) clamp(1.5rem, 6vw, 6rem);
   background: radial-gradient(
       70% 60% at 50% 45%,
-      rgba(143, 168, 150, 0.1) 0%,
+      rgba(143, 168, 150, 0.14) 0%,
       transparent 70%
     ),
-    var(--bg);
+    var(--bg-translucent);
   text-align: center;
 }
 

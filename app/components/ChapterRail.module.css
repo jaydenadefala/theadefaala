@@ -1,0 +1,85 @@
+.rail {
+  position: fixed;
+  right: clamp(1.25rem, 3vw, 2.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--z-nav);
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .rail {
+    display: block;
+  }
+}
+
+.rail ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rail a {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  padding: 0.15rem 0;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--fg-muted);
+  opacity: 0.5;
+  transition: background var(--duration-fast) var(--ease-standard),
+    opacity var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  opacity: 0;
+  transform: translateX(4px);
+  transition: opacity var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+  white-space: nowrap;
+}
+
+.rail a:hover .label {
+  opacity: 0.8;
+  transform: translateX(0);
+}
+
+.rail a:hover .dot {
+  opacity: 0.85;
+}
+
+.rail a.active .dot {
+  background: var(--accent);
+  opacity: 1;
+  transform: scale(1.4);
+}
+
+.rail a.active .label {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--fg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot,
+  .label {
+    transition: none;
+  }
+}

@@ -13,7 +13,7 @@ import {
   IdentityOverlay,
   ScrollCue,
 } from "@/app/components/opening/IdentityOverlay";
-import ParticleField from "./ParticleField";
+import ParticleField from "@/components/three/ParticleField";
 
 const PHOTO_SRC = "/images/hero.jpg";
 const PHOTO_ASPECT = 3 / 4;
