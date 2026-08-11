@@ -1,0 +1,48 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(0.5rem, 3vw, 2rem);
+}
+
+.arrow {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 241, 234, 0.18);
+  background: rgba(8, 9, 11, 0.4);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: border-color 0.3s var(--ease-standard),
+    background 0.3s var(--ease-standard);
+}
+
+.arrow:hover {
+  border-color: var(--accent);
+  background: rgba(8, 9, 11, 0.65);
+}
+
+.arrow:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.indicator {
+  position: absolute;
+  bottom: clamp(1rem, 4vh, 2rem);
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--fg-muted);
+}

@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Scene from "@/components/three/Scene";
+import PoetryGalleryScene from "@/components/three/poetry/PoetryGalleryScene";
+import PoetryGalleryFallback from "./PoetryGalleryFallback";
 import styles from "./poetry.module.css";
 
 export const metadata: Metadata = {
   title: "Poetry — theAdefala",
   description: "A slower room. Poems by theAdefala, published as they're ready.",
 };
-
-const PIECES = [
-  "Untitled (for the version of me that almost quit)",
-  "What the pulpit taught me about pull requests",
-  "Sunday, unfinished",
-];
 
 export default function PoetryPage() {
   return (
@@ -27,19 +24,17 @@ export default function PoetryPage() {
 
       <section className={styles.hero}>
         <span className={styles.kicker}>Poetry</span>
-        <h1 className={styles.title}>
-          A slower room, kept mostly quiet.
-        </h1>
+        <h1 className={styles.title}>A slower room, kept mostly quiet.</h1>
       </section>
 
-      <section className={styles.list} aria-label="Poems">
-        {PIECES.map((title) => (
-          <article key={title} className={styles.piece}>
-            <span className={styles.pieceStatus}>Coming soon</span>
-            <h2 className={styles.pieceTitle}>{title}</h2>
-          </article>
-        ))}
-      </section>
+      <div className={styles.galleryHost}>
+        <Scene
+          className={styles.canvasHost}
+          fallback={<PoetryGalleryFallback />}
+        >
+          <PoetryGalleryScene />
+        </Scene>
+      </div>
     </main>
   );
 }
