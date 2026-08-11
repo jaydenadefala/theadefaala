@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PREACHER_MESSAGES } from "@/content/preacher";
+import PreacherList from "./PreacherList";
 import styles from "./preacher.module.css";
 
 export const metadata: Metadata = {
@@ -8,13 +10,11 @@ export const metadata: Metadata = {
     "Not a brand pillar — a starting point. Reflections and messages by theAdefala.",
 };
 
-const ENTRIES = [
-  "The first message",
-  "Notes from a Sunday I almost skipped",
-  "On building and believing at the same time",
-];
-
 export default function PreacherPage() {
+  const sorted = [...PREACHER_MESSAGES].sort(
+    (a, b) => a.displayOrder - b.displayOrder
+  );
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -42,14 +42,7 @@ export default function PreacherPage() {
         </p>
       </section>
 
-      <section className={styles.list} aria-label="Messages and reflections">
-        {ENTRIES.map((title) => (
-          <article key={title} className={styles.entry}>
-            <span className={styles.entryStatus}>Coming soon</span>
-            <h2 className={styles.entryTitle}>{title}</h2>
-          </article>
-        ))}
-      </section>
+      <PreacherList messages={sorted} />
     </main>
   );
 }

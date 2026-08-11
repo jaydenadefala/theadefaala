@@ -36,6 +36,16 @@ interface ScrollRevealOptions {
  * Preacher) build their own gsap.timeline but still pull duration/ease
  * from ./tokens so the *values* stay centralized even when the shape
  * of the animation doesn't fit this hook.
+ *
+ * Deliberately uses a *decoupled* paused-timeline + ScrollTrigger.create
+ * pair rather than attaching `scrollTrigger` directly to the tween: on
+ * short pages, where the trigger's calculated start position ends up
+ * negative (content already past the "start" threshold at the initial
+ * scroll position), the fused tween+scrollTrigger shorthand's automatic
+ * play-on-enter silently never plays the animation even though onEnter
+ * fires — the timeline stays paused at its initial "from" state forever.
+ * The explicit tl.play() call in onEnter (plus an immediate check for
+ * the already-satisfied case) sidesteps that failure mode entirely.
  */
 export function useScrollReveal(
   triggerRef: RevealTarget,
@@ -69,23 +79,33 @@ export function useScrollReveal(
         return;
       }
 
-      gsap.fromTo(
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(
         els,
         { autoAlpha: 0, y, ...from },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration,
-          ease,
-          stagger,
-          ...to,
-          scrollTrigger: {
-            trigger: triggerRef.current,
-            start,
-            once,
-          },
-        }
+        { autoAlpha: 1, y: 0, duration, ease, stagger, ...to }
       );
+
+      // Guarded so onEnter firing synchronously during ScrollTrigger.create
+      // (the common case on short pages where the trigger condition is
+      // already satisfied at load) and the isActive fallback below can
+      // never both call tl.play() in the same tick — doing so silently
+      // wedges the timeline (confirmed: onComplete never fires).
+      let played = false;
+      const playOnce = () => {
+        if (played) return;
+        played = true;
+        tl.play();
+      };
+
+      const st = ScrollTrigger.create({
+        trigger: triggerRef.current,
+        start,
+        once,
+        onEnter: playOnce,
+      });
+
+      if (st.isActive) playOnce();
     }, triggerRef);
 
     return () => ctx.revert();
