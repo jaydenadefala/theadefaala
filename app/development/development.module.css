@@ -62,47 +62,9 @@
   max-width: 58ch;
 }
 
-.tracks {
+.systems {
   margin-top: clamp(3rem, 8vh, 5rem);
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(1.5rem, 3vw, 2.5rem);
   max-width: 1080px;
-}
-
-.track {
-  padding: clamp(2rem, 3vw, 2.75rem);
-  border-radius: 20px;
-  background: linear-gradient(
-    155deg,
-    rgba(244, 241, 234, 0.06),
-    rgba(244, 241, 234, 0.02)
-  );
-  border: 1px solid rgba(244, 241, 234, 0.08);
-}
-
-.trackLabel {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--highlight);
-}
-
-.trackTitle {
-  margin-top: 0.75rem;
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(1.5rem, 2.6vw, 2rem);
-  color: var(--fg);
-}
-
-.trackBody {
-  margin-top: 1rem;
-  font-family: var(--font-sans);
-  font-size: 0.98rem;
-  line-height: 1.7;
-  color: var(--fg-muted);
 }
 
 .principles {
@@ -147,10 +109,4 @@
   height: 6px;
   border-radius: 50%;
   background: var(--accent);
-}
-
-@media (max-width: 767px) {
-  .tracks {
-    grid-template-columns: 1fr;
-  }
 }

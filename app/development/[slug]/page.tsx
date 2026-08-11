@@ -1,0 +1,145 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import {
+  DEVELOPMENT_PROJECTS,
+  getProject,
+  getAdjacentProjects,
+} from "@/content/development";
+import styles from "./development-detail.module.css";
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export function generateStaticParams() {
+  return DEVELOPMENT_PROJECTS.map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProject(slug);
+  if (!project) return {};
+  return {
+    title: `${project.name} — theAdefala`,
+    description: project.shortDescription,
+  };
+}
+
+export default async function DevelopmentDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  const project = getProject(slug);
+  if (!project) notFound();
+
+  const { prev, next } = getAdjacentProjects(slug);
+
+  return (
+    <main className={styles.page}>
+      <header className={styles.header}>
+        <Link href="/" className={styles.wordmark}>
+          theAdefala
+        </Link>
+        <Link href="/development" className={styles.back}>
+          ← Back to development
+        </Link>
+      </header>
+
+      <article>
+        <div className={styles.hero}>
+          <span className={styles.category}>{project.category}</span>
+          <h1 className={styles.title}>{project.name}</h1>
+          <p className={styles.description}>{project.shortDescription}</p>
+        </div>
+
+        <div className={styles.meta}>
+          <div>
+            <span className={styles.metaLabel}>Role</span>
+            <span className={styles.metaValue}>{project.role}</span>
+          </div>
+          <div>
+            <span className={styles.metaLabel}>Stack</span>
+            <ul className={styles.tags}>
+              {project.technologies.map((tech) => (
+                <li key={tech}>{tech}</li>
+              ))}
+            </ul>
+          </div>
+          {project.businessContext && (
+            <div>
+              <span className={styles.metaLabel}>Context</span>
+              <span className={styles.metaValue}>
+                {project.businessContext}
+              </span>
+            </div>
+          )}
+          {(project.externalUrl || project.githubUrl) && (
+            <div>
+              <span className={styles.metaLabel}>Links</span>
+              <div className={styles.links}>
+                {project.externalUrl && (
+                  <a
+                    href={project.externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Visit
+                  </a>
+                )}
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Source
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {project.status === "published" && project.fullDescription ? (
+          <p className={styles.description}>{project.fullDescription}</p>
+        ) : (
+          <div className={styles.draftNotice}>
+            <span className={styles.draftLabel}>Case study coming soon</span>
+            <p className={styles.draftText}>
+              The full write-up for this one isn&rsquo;t published yet —
+              this page exists so it has a real home the moment it is.
+            </p>
+          </div>
+        )}
+      </article>
+
+      {(prev || next) && (
+        <nav className={styles.nav} aria-label="More projects">
+          {prev ? (
+            <Link
+              href={`/development/${prev.slug}`}
+              className={styles.navLink}
+            >
+              <span className={styles.navLabel}>← Previous</span>
+              <span className={styles.navTitle}>{prev.name}</span>
+            </Link>
+          ) : (
+            <span />
+          )}
+          {next ? (
+            <Link
+              href={`/development/${next.slug}`}
+              className={styles.navLink}
+            >
+              <span className={styles.navLabel}>Next →</span>
+              <span className={styles.navTitle}>{next.name}</span>
+            </Link>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )}
+    </main>
+  );
+}

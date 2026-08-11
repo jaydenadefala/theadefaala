@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import DevSystemGrid from "@/components/DevSystemGrid";
+import { getProjectsByCategory } from "@/content/development";
 import styles from "./development.module.css";
 
 export const metadata: Metadata = {
@@ -7,19 +9,6 @@ export const metadata: Metadata = {
   description:
     "Web and business systems by theAdefala — what's built, how it's built, and why it matters.",
 };
-
-const TRACKS = [
-  {
-    label: "Web",
-    title: "Products, shipped.",
-    body: "Interfaces and systems built end to end — architecture, state, motion, and the last 5% of polish most teams skip under deadline. I'd rather ship something smaller and correct than something large and shaky.",
-  },
-  {
-    label: "Business",
-    title: "The plumbing underneath.",
-    body: "Ops tooling, automation, and decision-support systems — the unglamorous work that makes everything else possible. Good business systems are invisible when they work and expensive when they don't.",
-  },
-];
 
 const PRINCIPLES = [
   "Start from the constraint, not the template.",
@@ -29,6 +18,9 @@ const PRINCIPLES = [
 ];
 
 export default function DevelopmentPage() {
+  const webProjects = getProjectsByCategory("Web");
+  const businessProjects = getProjectsByCategory("Business");
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -50,15 +42,10 @@ export default function DevelopmentPage() {
         </p>
       </section>
 
-      <section className={styles.tracks} aria-label="Web and Business tracks">
-        {TRACKS.map((track) => (
-          <article key={track.label} className={styles.track}>
-            <span className={styles.trackLabel}>{track.label}</span>
-            <h2 className={styles.trackTitle}>{track.title}</h2>
-            <p className={styles.trackBody}>{track.body}</p>
-          </article>
-        ))}
-      </section>
+      <div className={styles.systems}>
+        <DevSystemGrid label="Web" projects={webProjects} />
+        <DevSystemGrid label="Business" projects={businessProjects} />
+      </div>
 
       <section className={styles.principles} aria-label="How I build">
         <span className={styles.principlesTitle}>How I build</span>
