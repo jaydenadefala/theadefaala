@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Scene from "@/components/three/Scene";
+import WritingGalleryScene from "@/components/three/writing/WritingGalleryScene";
+import WritingGalleryFallback from "./WritingGalleryFallback";
 import styles from "./writing.module.css";
 
 export const metadata: Metadata = {
@@ -7,24 +10,6 @@ export const metadata: Metadata = {
   description:
     "Essays, reflections, and poems by theAdefala — a working archive, not a highlight reel.",
 };
-
-const PIECES = [
-  {
-    title: "On building in the dark before anyone is watching",
-    kind: "Essay",
-    status: "Coming soon",
-  },
-  {
-    title: "A short list of things I no longer apologize for",
-    kind: "Reflection",
-    status: "Coming soon",
-  },
-  {
-    title: "Untitled (for the version of me that almost quit)",
-    kind: "Poem",
-    status: "Coming soon",
-  },
-];
 
 export default function WritingPage() {
   return (
@@ -49,15 +34,14 @@ export default function WritingPage() {
         </p>
       </section>
 
-      <section className={styles.list} aria-label="Selected writing">
-        {PIECES.map((piece) => (
-          <article key={piece.title} className={styles.piece}>
-            <span className={styles.pieceKind}>{piece.kind}</span>
-            <h2 className={styles.pieceTitle}>{piece.title}</h2>
-            <span className={styles.pieceStatus}>{piece.status}</span>
-          </article>
-        ))}
-      </section>
+      <div className={styles.galleryHost}>
+        <Scene
+          className={styles.canvasHost}
+          fallback={<WritingGalleryFallback />}
+        >
+          <WritingGalleryScene />
+        </Scene>
+      </div>
     </main>
   );
 }

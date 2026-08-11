@@ -63,47 +63,12 @@
   max-width: 56ch;
 }
 
-.list {
-  margin-top: clamp(3rem, 8vh, 5rem);
-  max-width: 760px;
-  border-top: 1px solid rgba(244, 241, 234, 0.1);
+.galleryHost {
+  margin-top: clamp(2rem, 6vh, 4rem);
 }
 
-.piece {
-  display: grid;
-  grid-template-columns: 100px 1fr auto;
-  align-items: baseline;
-  gap: 1.5rem;
-  padding: 1.75rem 0;
-  border-bottom: 1px solid rgba(244, 241, 234, 0.1);
-}
-
-.pieceKind {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--highlight);
-}
-
-.pieceTitle {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: clamp(1.1rem, 2vw, 1.4rem);
-  color: var(--fg);
-  line-height: 1.35;
-}
-
-.pieceStatus {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  color: var(--fg-muted);
-  white-space: nowrap;
-}
-
-@media (max-width: 640px) {
-  .piece {
-    grid-template-columns: 1fr;
-    gap: 0.4rem;
-  }
+.canvasHost {
+  position: relative;
+  width: 100%;
+  height: min(70vh, 620px);
 }
