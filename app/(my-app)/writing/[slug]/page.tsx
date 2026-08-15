@@ -2,25 +2,28 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  WRITING_PIECES,
+  getWritingPieces,
   getWritingPiece,
   getAdjacentWritingPieces,
-} from "@/content/writing";
+} from "@/lib/payload/writing";
 import styles from "./writing-detail.module.css";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return WRITING_PIECES.map((p) => ({ slug: p.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const pieces = await getWritingPieces();
+  return pieces.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const piece = getWritingPiece(slug);
+  const piece = await getWritingPiece(slug);
   if (!piece) return {};
   return {
     title: `${piece.title} — theAdefala`,
@@ -30,10 +33,10 @@ export async function generateMetadata({
 
 export default async function WritingDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const piece = getWritingPiece(slug);
+  const piece = await getWritingPiece(slug);
   if (!piece) notFound();
 
-  const { prev, next } = getAdjacentWritingPieces(slug);
+  const { prev, next } = await getAdjacentWritingPieces(slug);
 
   return (
     <main className={styles.page}>

@@ -1,8 +1,15 @@
 import type { CollectionConfig } from "payload";
+import { authenticated } from "../access/authenticated";
 
 /** Mirrors content/development.ts's DevelopmentProject shape. */
 export const DevelopmentProjects: CollectionConfig = {
   slug: "development-projects",
+  access: {
+    read: () => true,
+    create: authenticated,
+    update: authenticated,
+    delete: authenticated,
+  },
   admin: {
     useAsTitle: "name",
     defaultColumns: ["name", "category", "_status", "displayOrder"],

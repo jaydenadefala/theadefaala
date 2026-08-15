@@ -1,8 +1,15 @@
 import type { CollectionConfig } from "payload";
+import { authenticated } from "../access/authenticated";
 
 /** Mirrors content/preacher.ts's PreacherMessage shape. */
 export const PreacherMessages: CollectionConfig = {
   slug: "preacher-messages",
+  access: {
+    read: () => true,
+    create: authenticated,
+    update: authenticated,
+    delete: authenticated,
+  },
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "category", "_status", "displayOrder"],

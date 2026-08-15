@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  PREACHER_MESSAGES,
+  getMessages,
   getMessage,
   getAdjacentMessages,
-} from "@/content/preacher";
+} from "@/lib/payload/preacher";
 import AudioPlayer from "@/components/AudioPlayer";
 import styles from "./preacher-detail.module.css";
 
@@ -13,15 +13,18 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return PREACHER_MESSAGES.map((m) => ({ slug: m.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const messages = await getMessages();
+  return messages.map((m) => ({ slug: m.slug }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const message = getMessage(slug);
+  const message = await getMessage(slug);
   if (!message) return {};
   return {
     title: `${message.title} — theAdefala`,
@@ -31,10 +34,10 @@ export async function generateMetadata({
 
 export default async function PreacherDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const message = getMessage(slug);
+  const message = await getMessage(slug);
   if (!message) notFound();
 
-  const { prev, next } = getAdjacentMessages(slug);
+  const { prev, next } = await getAdjacentMessages(slug);
 
   return (
     <main className={styles.page}>

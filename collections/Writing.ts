@@ -1,14 +1,23 @@
 import type { CollectionConfig } from "payload";
+import { authenticated } from "../access/authenticated";
 
 /**
  * Mirrors content/writing.ts's WritingPiece shape. Payload's native
  * draft/publish versioning replaces the hand-rolled status field —
  * the adapter layer (Milestone 11) maps _status back to the existing
  * "draft" | "published" domain type so components never see the
- * difference.
+ * difference. Read is public and deliberately includes drafts (no
+ * access.read restriction) — the site's "coming soon" pattern depends
+ * on draft content being visible; only writes require auth.
  */
 export const Writing: CollectionConfig = {
   slug: "writing",
+  access: {
+    read: () => true,
+    create: authenticated,
+    update: authenticated,
+    delete: authenticated,
+  },
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "category", "_status", "displayOrder"],

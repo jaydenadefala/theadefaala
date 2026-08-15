@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import DevSystemGrid from "@/components/DevSystemGrid";
-import { getProjectsByCategory } from "@/content/development";
+import { getProjectsByCategory } from "@/lib/payload/development";
 import styles from "./development.module.css";
 
 export const metadata: Metadata = {
@@ -17,9 +17,13 @@ const PRINCIPLES = [
   "Ship the smallest true version, then earn the next layer.",
 ];
 
-export default function DevelopmentPage() {
-  const webProjects = getProjectsByCategory("Web");
-  const businessProjects = getProjectsByCategory("Business");
+export const revalidate = 60;
+
+export default async function DevelopmentPage() {
+  const [webProjects, businessProjects] = await Promise.all([
+    getProjectsByCategory("Web"),
+    getProjectsByCategory("Business"),
+  ]);
 
   return (
     <main className={styles.page}>

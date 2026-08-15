@@ -1,6 +1,10 @@
 import Link from "next/link";
-import { POEMS, MOOD_STYLES } from "@/content/poetry";
+import { MOOD_STYLES, type PoemPiece } from "@/content/poetry";
 import styles from "./PoetryGalleryFallback.module.css";
+
+interface PoetryGalleryFallbackProps {
+  poems: PoemPiece[];
+}
 
 /**
  * Native horizontal scroll-snap — the cheap, robust CSS equivalent of
@@ -8,8 +12,8 @@ import styles from "./PoetryGalleryFallback.module.css";
  * even in the 3D-capable case ("horizontal swipe/snap"). Here it's the
  * Scene fallback for no-WebGL/reduced-motion.
  */
-export default function PoetryGalleryFallback() {
-  const sorted = [...POEMS].sort((a, b) => a.displayOrder - b.displayOrder);
+export default function PoetryGalleryFallback({ poems }: PoetryGalleryFallbackProps) {
+  const sorted = [...poems].sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
     <div className={styles.track}>

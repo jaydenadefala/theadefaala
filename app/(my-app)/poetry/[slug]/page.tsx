@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { POEMS, MOOD_STYLES, getPoem, getAdjacentPoems } from "@/content/poetry";
+import { MOOD_STYLES } from "@/content/poetry";
+import { getPoems, getPoem, getAdjacentPoems } from "@/lib/payload/poems";
 import AudioPlayer from "@/components/AudioPlayer";
 import styles from "./poetry-detail.module.css";
 
@@ -9,15 +10,18 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return POEMS.map((p) => ({ slug: p.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const poems = await getPoems();
+  return poems.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const poem = getPoem(slug);
+  const poem = await getPoem(slug);
   if (!poem) return {};
   return {
     title: `${poem.title} — theAdefala`,
@@ -27,11 +31,11 @@ export async function generateMetadata({
 
 export default async function PoemDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const poem = getPoem(slug);
+  const poem = await getPoem(slug);
   if (!poem) notFound();
 
   const mood = MOOD_STYLES[poem.mood];
-  const { prev, next } = getAdjacentPoems(slug);
+  const { prev, next } = await getAdjacentPoems(slug);
 
   return (
     <main

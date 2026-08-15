@@ -1,8 +1,15 @@
 import type { CollectionConfig } from "payload";
+import { authenticated } from "../access/authenticated";
 
 /** Mirrors content/poetry.ts's PoemPiece + MOOD_STYLES shape. */
 export const Poems: CollectionConfig = {
   slug: "poems",
+  access: {
+    read: () => true,
+    create: authenticated,
+    update: authenticated,
+    delete: authenticated,
+  },
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "mood", "_status", "displayOrder"],

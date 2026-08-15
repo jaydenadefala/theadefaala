@@ -3,6 +3,7 @@ import Link from "next/link";
 import Scene from "@/components/three/Scene";
 import PoetryGalleryScene from "@/components/three/poetry/PoetryGalleryScene";
 import PoetryGalleryFallback from "./PoetryGalleryFallback";
+import { getPoems } from "@/lib/payload/poems";
 import styles from "./poetry.module.css";
 
 export const metadata: Metadata = {
@@ -10,7 +11,11 @@ export const metadata: Metadata = {
   description: "A slower room. Poems by theAdefala, published as they're ready.",
 };
 
-export default function PoetryPage() {
+export const revalidate = 60;
+
+export default async function PoetryPage() {
+  const poems = await getPoems();
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -30,9 +35,9 @@ export default function PoetryPage() {
       <div className={styles.galleryHost}>
         <Scene
           className={styles.canvasHost}
-          fallback={<PoetryGalleryFallback />}
+          fallback={<PoetryGalleryFallback poems={poems} />}
         >
-          <PoetryGalleryScene />
+          <PoetryGalleryScene poems={poems} />
         </Scene>
       </div>
     </main>

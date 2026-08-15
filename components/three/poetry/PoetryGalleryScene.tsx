@@ -7,7 +7,7 @@ import { gsap } from "gsap";
 import type * as THREE from "three";
 import ParticleField from "@/components/three/ParticleField";
 import PoemCard from "./PoemCard";
-import { POEMS, MOOD_STYLES } from "@/content/poetry";
+import { MOOD_STYLES, type PoemPiece } from "@/content/poetry";
 import navStyles from "./PoetryNav.module.css";
 
 const SPACING = 3.4;
@@ -21,10 +21,14 @@ function CameraDrift() {
   return null;
 }
 
-export default function PoetryGalleryScene() {
+interface PoetryGallerySceneProps {
+  poems: PoemPiece[];
+}
+
+export default function PoetryGalleryScene({ poems }: PoetryGallerySceneProps) {
   const sorted = useMemo(
-    () => [...POEMS].sort((a, b) => a.displayOrder - b.displayOrder),
-    []
+    () => [...poems].sort((a, b) => a.displayOrder - b.displayOrder),
+    [poems]
   );
   const [currentIndex, setCurrentIndex] = useState(0);
   const rowRef = useRef<THREE.Group>(null);

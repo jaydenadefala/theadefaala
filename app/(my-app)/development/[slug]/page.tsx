@@ -2,25 +2,28 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  DEVELOPMENT_PROJECTS,
+  getDevelopmentProjects,
   getProject,
   getAdjacentProjects,
-} from "@/content/development";
+} from "@/lib/payload/development";
 import styles from "./development-detail.module.css";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return DEVELOPMENT_PROJECTS.map((p) => ({ slug: p.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const projects = await getDevelopmentProjects();
+  return projects.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProject(slug);
+  const project = await getProject(slug);
   if (!project) return {};
   return {
     title: `${project.name} — theAdefala`,
@@ -30,10 +33,10 @@ export async function generateMetadata({
 
 export default async function DevelopmentDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const project = getProject(slug);
+  const project = await getProject(slug);
   if (!project) notFound();
 
-  const { prev, next } = getAdjacentProjects(slug);
+  const { prev, next } = await getAdjacentProjects(slug);
 
   return (
     <main className={styles.page}>

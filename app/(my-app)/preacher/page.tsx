@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PREACHER_MESSAGES } from "@/content/preacher";
+import { getMessages } from "@/lib/payload/preacher";
 import PreacherList from "./PreacherList";
 import styles from "./preacher.module.css";
 
@@ -10,8 +10,11 @@ export const metadata: Metadata = {
     "Not a brand pillar — a starting point. Reflections and messages by theAdefala.",
 };
 
-export default function PreacherPage() {
-  const sorted = [...PREACHER_MESSAGES].sort(
+export const revalidate = 60;
+
+export default async function PreacherPage() {
+  const messages = await getMessages();
+  const sorted = [...messages].sort(
     (a, b) => a.displayOrder - b.displayOrder
   );
 

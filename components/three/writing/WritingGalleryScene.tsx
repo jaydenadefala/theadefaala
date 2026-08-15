@@ -4,7 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import ParticleField from "@/components/three/ParticleField";
 import WritingCard from "./WritingCard";
-import { WRITING_PIECES } from "@/content/writing";
+import type { WritingPiece } from "@/content/writing";
 
 /** Fan/constellation layout: spread across a shallow arc facing the
  *  camera, alternating depth and a little vertical variance so it
@@ -53,10 +53,14 @@ function CameraParallax() {
   return null;
 }
 
-export default function WritingGalleryScene() {
+interface WritingGallerySceneProps {
+  pieces: WritingPiece[];
+}
+
+export default function WritingGalleryScene({ pieces }: WritingGallerySceneProps) {
   const sorted = useMemo(
-    () => [...WRITING_PIECES].sort((a, b) => a.displayOrder - b.displayOrder),
-    []
+    () => [...pieces].sort((a, b) => a.displayOrder - b.displayOrder),
+    [pieces]
   );
   const layout = useConstellationLayout(sorted.length);
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);

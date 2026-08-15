@@ -3,6 +3,7 @@ import Link from "next/link";
 import Scene from "@/components/three/Scene";
 import WritingGalleryScene from "@/components/three/writing/WritingGalleryScene";
 import WritingGalleryFallback from "./WritingGalleryFallback";
+import { getWritingPieces } from "@/lib/payload/writing";
 import styles from "./writing.module.css";
 
 export const metadata: Metadata = {
@@ -11,7 +12,11 @@ export const metadata: Metadata = {
     "Essays, reflections, and poems by theAdefala — a working archive, not a highlight reel.",
 };
 
-export default function WritingPage() {
+export const revalidate = 60;
+
+export default async function WritingPage() {
+  const pieces = await getWritingPieces();
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -37,9 +42,9 @@ export default function WritingPage() {
       <div className={styles.galleryHost}>
         <Scene
           className={styles.canvasHost}
-          fallback={<WritingGalleryFallback />}
+          fallback={<WritingGalleryFallback pieces={pieces} />}
         >
-          <WritingGalleryScene />
+          <WritingGalleryScene pieces={pieces} />
         </Scene>
       </div>
     </main>

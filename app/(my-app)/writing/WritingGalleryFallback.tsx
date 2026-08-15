@@ -1,16 +1,21 @@
 import Link from "next/link";
-import { WRITING_PIECES } from "@/content/writing";
+import type { WritingPiece } from "@/content/writing";
 import styles from "./WritingGalleryFallback.module.css";
+
+interface WritingGalleryFallbackProps {
+  pieces: WritingPiece[];
+}
 
 /**
  * Plain DOM/CSS list — the Scene fallback for no-WebGL devices and
- * prefers-reduced-motion. Same data source as the 3D gallery, so the
- * two views can never drift out of sync with each other.
+ * prefers-reduced-motion. Same data (passed down from the page's one
+ * fetch) as the 3D gallery, so the two views can never drift out of
+ * sync with each other.
  */
-export default function WritingGalleryFallback() {
-  const sorted = [...WRITING_PIECES].sort(
-    (a, b) => a.displayOrder - b.displayOrder
-  );
+export default function WritingGalleryFallback({
+  pieces,
+}: WritingGalleryFallbackProps) {
+  const sorted = [...pieces].sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
     <section className={styles.list} aria-label="Selected writing">
