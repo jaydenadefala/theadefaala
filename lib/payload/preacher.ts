@@ -1,5 +1,6 @@
 import { getPayloadClient } from "./getPayloadClient";
 import { serializeRichTextToParagraphs } from "./serializeRichText";
+import { pickFeatured } from "./featured";
 import type { PreacherMessage } from "@/content/preacher";
 import type { PreacherMessage as PreacherMessageDoc, Media } from "@/payload-types";
 
@@ -49,6 +50,14 @@ export async function getMessage(
   });
   const doc = result.docs[0];
   return doc ? toDomain(doc) : undefined;
+}
+
+/** Homepage teaser lookup — the message marked featured, or the first one. */
+export async function getFeaturedMessage(): Promise<
+  PreacherMessage | undefined
+> {
+  const messages = await getMessages();
+  return pickFeatured(messages);
 }
 
 export async function getAdjacentMessages(slug: string) {

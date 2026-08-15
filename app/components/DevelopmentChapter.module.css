@@ -129,6 +129,25 @@
   max-width: 44ch;
 }
 
+.featuredLabel {
+  color: var(--highlight);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-right: 0.5em;
+}
+
+.featuredName {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(244, 241, 234, 0.3);
+}
+
+.featuredName:hover {
+  text-decoration-color: var(--highlight);
+}
+
 .link {
   font-family: var(--font-sans);
   font-size: 0.9rem;

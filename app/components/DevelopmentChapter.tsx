@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRef } from "react";
 import { useScrollReveal } from "@/lib/motion/useScrollReveal";
+import type { DevelopmentProject } from "@/content/development";
 import styles from "./DevelopmentChapter.module.css";
 
 const TRACKS = [
@@ -20,7 +21,11 @@ const TRACKS = [
   },
 ];
 
-export default function DevelopmentChapter() {
+interface DevelopmentChapterProps {
+  project?: DevelopmentProject;
+}
+
+export default function DevelopmentChapter({ project }: DevelopmentChapterProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const kickerRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -86,8 +91,21 @@ export default function DevelopmentChapter() {
 
       <div ref={footerRef} className={styles.footerRow}>
         <p className={styles.footerNote}>
-          What&rsquo;s built, how it&rsquo;s built, and why it matters —
-          laid out in more detail.
+          {project ? (
+            <>
+              <span className={styles.featuredLabel}>Currently</span>
+              <Link
+                href={`/development/${project.slug}`}
+                className={styles.featuredName}
+              >
+                {project.name}
+              </Link>
+              {" — "}
+              {project.shortDescription}
+            </>
+          ) : (
+            "What's built, how it's built, and why it matters — laid out in more detail."
+          )}
         </p>
         <Link href="/development" className={styles.link}>
           See the work →

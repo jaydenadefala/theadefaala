@@ -6,23 +6,29 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { EASE } from "@/lib/motion/tokens";
 import { getReducedMotionNow } from "@/lib/motion/useReducedMotion";
+import type { PreacherMessage } from "@/content/preacher";
 import styles from "./PreacherChapter.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function PreacherChapter() {
+interface PreacherChapterProps {
+  message?: PreacherMessage;
+}
+
+export default function PreacherChapter({ message }: PreacherChapterProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const kickerRef = useRef<HTMLDivElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
   const statementRef = useRef<HTMLParagraphElement>(null);
   const bodyRef = useRef<HTMLParagraphElement>(null);
+  const featuredRef = useRef<HTMLDivElement>(null);
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       if (getReducedMotionNow()) return;
 
-      gsap.timeline({
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top 60%",
@@ -33,8 +39,10 @@ export default function PreacherChapter() {
         .to(kickerRef.current, { autoAlpha: 1 })
         .to(ruleRef.current, { autoAlpha: 1 }, "-=0.6")
         .to(statementRef.current, { autoAlpha: 1 }, "-=0.3")
-        .to(bodyRef.current, { autoAlpha: 1 }, "-=0.4")
-        .to(linkRef.current, { autoAlpha: 1 }, "-=0.5");
+        .to(bodyRef.current, { autoAlpha: 1 }, "-=0.4");
+
+      if (featuredRef.current) tl.to(featuredRef.current, { autoAlpha: 1 }, "-=0.5");
+      tl.to(linkRef.current, { autoAlpha: 1 }, "-=0.5");
     }, sectionRef);
 
     return () => ctx.revert();
@@ -59,7 +67,23 @@ export default function PreacherChapter() {
           Not a brand pillar — a starting point. The work, the words, and
           the way I build all answer to something first.
         </p>
-        <Link href="/preacher" ref={linkRef} className={styles.link}>
+        {message && (
+          <div ref={featuredRef} className={styles.featured}>
+            <span className={styles.featuredLabel}>Featured</span>
+            <Link
+              href={`/preacher/${message.slug}`}
+              className={styles.featuredTitle}
+            >
+              {message.title}
+            </Link>
+            <p className={styles.featuredExcerpt}>{message.excerpt}</p>
+          </div>
+        )}
+        <Link
+          href={message ? `/preacher/${message.slug}` : "/preacher"}
+          ref={linkRef}
+          className={styles.link}
+        >
           Read the message →
         </Link>
       </div>

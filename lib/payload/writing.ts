@@ -1,5 +1,6 @@
 import { getPayloadClient } from "./getPayloadClient";
 import { serializeRichTextToParagraphs } from "./serializeRichText";
+import { pickFeatured } from "./featured";
 import type { WritingPiece } from "@/content/writing";
 import type { Writing as WritingDoc } from "@/payload-types";
 
@@ -58,6 +59,14 @@ export async function getWritingPiece(
   });
   const doc = result.docs[0];
   return doc ? toDomain(doc) : undefined;
+}
+
+/** Homepage teaser lookup — the piece marked featured, or the first one. */
+export async function getFeaturedWritingPiece(): Promise<
+  WritingPiece | undefined
+> {
+  const pieces = await getWritingPieces();
+  return pickFeatured(pieces);
 }
 
 export async function getAdjacentWritingPieces(slug: string) {

@@ -1,28 +1,48 @@
 "use client";
 
 import Link from "next/link";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { EASE } from "@/lib/motion/tokens";
 import { getReducedMotionNow } from "@/lib/motion/useReducedMotion";
+import type { PoemPiece } from "@/content/poetry";
 import styles from "./PoetryChapter.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const LINES = [
+/**
+ * Used whenever there's no published featured poem with real lines yet
+ * (true for all seeded poems today — they're honest drafts with empty
+ * `lines`). The moment a featured poem is published with content, its
+ * real lines take over automatically; this stays as the graceful
+ * "nothing to show yet" state, not a permanent placeholder.
+ */
+const FALLBACK_LINES = [
   "I have learned to build in seasons",
   "I did not choose,",
   "and to call that faith",
   "instead of delay.",
 ];
 
-export default function PoetryChapter() {
+interface PoetryChapterProps {
+  poem?: PoemPiece;
+}
+
+export default function PoetryChapter({ poem }: PoetryChapterProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const kickerRef = useRef<HTMLDivElement>(null);
   const poemRef = useRef<HTMLParagraphElement>(null);
   const teaserRef = useRef<HTMLParagraphElement>(null);
   const linkRef = useRef<HTMLAnchorElement>(null);
+
+  const lines = useMemo(
+    () =>
+      poem && poem.status === "published" && poem.lines.length > 0
+        ? poem.lines
+        : FALLBACK_LINES,
+    [poem]
+  );
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -80,8 +100,8 @@ export default function PoetryChapter() {
         </div>
 
         <p ref={poemRef} className={styles.poem}>
-          {LINES.map((line) => (
-            <span key={line} className={styles.line}>
+          {lines.map((line, i) => (
+            <span key={`${i}-${line}`} className={styles.line}>
               {line}
             </span>
           ))}
@@ -92,7 +112,11 @@ export default function PoetryChapter() {
           other. A slower room, kept mostly quiet.
         </p>
 
-        <Link ref={linkRef} href="/poetry" className={styles.link}>
+        <Link
+          ref={linkRef}
+          href={poem ? `/poetry/${poem.slug}` : "/poetry"}
+          className={styles.link}
+        >
           Read the poems →
         </Link>
       </div>

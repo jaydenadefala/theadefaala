@@ -1,4 +1,5 @@
 import { getPayloadClient } from "./getPayloadClient";
+import { pickFeatured } from "./featured";
 import type { PoemPiece } from "@/content/poetry";
 import type { Poem as PoemDoc, Media } from "@/payload-types";
 
@@ -44,6 +45,12 @@ export async function getPoem(slug: string): Promise<PoemPiece | undefined> {
   });
   const doc = result.docs[0];
   return doc ? toDomain(doc) : undefined;
+}
+
+/** Homepage teaser lookup — the poem marked featured, or the first one. */
+export async function getFeaturedPoem(): Promise<PoemPiece | undefined> {
+  const poems = await getPoems();
+  return pickFeatured(poems);
 }
 
 export async function getAdjacentPoems(slug: string) {

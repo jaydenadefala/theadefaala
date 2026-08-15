@@ -4,18 +4,24 @@ import Link from "next/link";
 import { useRef } from "react";
 import { useScrollReveal } from "@/lib/motion/useScrollReveal";
 import { getReducedMotionNow } from "@/lib/motion/useReducedMotion";
+import type { WritingPiece } from "@/content/writing";
 import styles from "./WritingChapter.module.css";
 
-export default function WritingChapter() {
+interface WritingChapterProps {
+  piece?: WritingPiece;
+}
+
+export default function WritingChapter({ piece }: WritingChapterProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const kickerRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const teaserRef = useRef<HTMLParagraphElement>(null);
+  const featuredRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
 
   useScrollReveal(
     sectionRef,
-    [kickerRef, headlineRef, teaserRef, actionsRef],
+    [kickerRef, headlineRef, teaserRef, featuredRef, actionsRef],
     { duration: 0.8 }
   );
 
@@ -49,6 +55,19 @@ export default function WritingChapter() {
           Sundays — the throughline underneath everything else here. A
           working archive, not a highlight reel.
         </p>
+
+        {piece && (
+          <div ref={featuredRef} className={styles.featured}>
+            <span className={styles.featuredLabel}>Featured</span>
+            <Link
+              href={`/writing/${piece.slug}`}
+              className={styles.featuredTitle}
+            >
+              {piece.title}
+            </Link>
+            <p className={styles.featuredExcerpt}>{piece.excerpt}</p>
+          </div>
+        )}
 
         <div ref={actionsRef} className={styles.actions}>
           <Link href="/writing" className={styles.primary}>

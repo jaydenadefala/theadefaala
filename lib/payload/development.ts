@@ -1,5 +1,6 @@
 import { getPayloadClient } from "./getPayloadClient";
 import { serializeRichTextToParagraphs } from "./serializeRichText";
+import { pickFeatured } from "./featured";
 import type { DevelopmentProject, ProjectCategory } from "@/content/development";
 import type { DevelopmentProject as DevelopmentProjectDoc } from "@/payload-types";
 
@@ -51,6 +52,14 @@ export async function getProject(
   });
   const doc = result.docs[0];
   return doc ? toDomain(doc) : undefined;
+}
+
+/** Homepage teaser lookup — the project marked featured, or the first one. */
+export async function getFeaturedProject(): Promise<
+  DevelopmentProject | undefined
+> {
+  const projects = await getDevelopmentProjects();
+  return pickFeatured(projects);
 }
 
 export async function getAdjacentProjects(slug: string) {
