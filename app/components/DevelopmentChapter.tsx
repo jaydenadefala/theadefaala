@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRef } from "react";
 import { useScrollReveal } from "@/lib/motion/useScrollReveal";
+import { useChapterRecede } from "@/lib/motion/useChapterRecede";
 import type { DevelopmentProject } from "@/content/development";
 import styles from "./DevelopmentChapter.module.css";
 
@@ -33,6 +34,8 @@ export default function DevelopmentChapter({ project }: DevelopmentChapterProps)
   const footerRef = useRef<HTMLDivElement>(null);
 
   cardRefs.current = [];
+
+  useChapterRecede(sectionRef);
 
   useScrollReveal(sectionRef, [kickerRef, headlineRef], { duration: 0.8 });
 

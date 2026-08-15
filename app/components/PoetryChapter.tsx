@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { EASE } from "@/lib/motion/tokens";
 import { getReducedMotionNow } from "@/lib/motion/useReducedMotion";
+import { useChapterRecede } from "@/lib/motion/useChapterRecede";
 import type { PoemPiece } from "@/content/poetry";
 import styles from "./PoetryChapter.module.css";
 
@@ -43,6 +44,8 @@ export default function PoetryChapter({ poem }: PoetryChapterProps) {
         : FALLBACK_LINES,
     [poem]
   );
+
+  useChapterRecede(sectionRef);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {

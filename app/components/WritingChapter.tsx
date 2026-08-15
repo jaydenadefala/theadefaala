@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRef } from "react";
 import { useScrollReveal } from "@/lib/motion/useScrollReveal";
+import { useChapterRecede } from "@/lib/motion/useChapterRecede";
 import { getReducedMotionNow } from "@/lib/motion/useReducedMotion";
 import type { WritingPiece } from "@/content/writing";
 import styles from "./WritingChapter.module.css";
@@ -18,6 +19,8 @@ export default function WritingChapter({ piece }: WritingChapterProps) {
   const teaserRef = useRef<HTMLParagraphElement>(null);
   const featuredRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
+
+  useChapterRecede(sectionRef);
 
   useScrollReveal(
     sectionRef,

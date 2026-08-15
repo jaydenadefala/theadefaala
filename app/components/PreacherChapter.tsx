@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { EASE } from "@/lib/motion/tokens";
 import { getReducedMotionNow } from "@/lib/motion/useReducedMotion";
+import { useChapterRecede } from "@/lib/motion/useChapterRecede";
 import type { PreacherMessage } from "@/content/preacher";
 import styles from "./PreacherChapter.module.css";
 
@@ -23,6 +24,11 @@ export default function PreacherChapter({ message }: PreacherChapterProps) {
   const bodyRef = useRef<HTMLParagraphElement>(null);
   const featuredRef = useRef<HTMLDivElement>(null);
   const linkRef = useRef<HTMLAnchorElement>(null);
+
+  // Gentler than the other chapters — Preacher's whole point is
+  // reduced visual complexity (the contrast with Writing/Poetry is
+  // deliberate), so its exit stays understated too.
+  useChapterRecede(sectionRef, { recedeScale: 0.97, recedeOpacity: 0.7 });
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
