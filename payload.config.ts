@@ -43,6 +43,17 @@ export default buildConfig({
     client: {
       url: process.env.DATABASE_URL || "file:./payload.db",
     },
+    // Payload's dev-mode auto schema push (drizzle-kit's SQLite diff)
+    // hit a real, reproducible bug this session: on repeated
+    // invocations against an already-correct schema, it sometimes
+    // concludes an index needs (re)creating when it already exists,
+    // throws, and takes the whole app down with it (confirmed via
+    // direct sqlite_master introspection — the schema was never
+    // actually wrong, only the diff was). Off by default so normal
+    // dev/build runs never hit it; run `npm run db:push` after
+    // editing a collection's fields, which sets PAYLOAD_PUSH_SCHEMA=true
+    // for that one invocation only.
+    push: process.env.PAYLOAD_PUSH_SCHEMA === "true",
   }),
   sharp,
 });

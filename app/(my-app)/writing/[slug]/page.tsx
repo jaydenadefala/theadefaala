@@ -54,7 +54,11 @@ export default async function WritingDetailPage({ params }: PageProps) {
         style={
           piece.coverImage
             ? {
-                backgroundImage: `linear-gradient(155deg, ${piece.accent}22, var(--bg-soft)66), url(${piece.coverImage})`,
+                // A var() reference can't have an alpha suffix glued
+                // onto it (`var(--bg-soft)66` is invalid CSS and
+                // silently drops the whole background-image value) —
+                // rgba() against --bg-soft's actual color instead.
+                backgroundImage: `linear-gradient(155deg, ${piece.accent}22, rgba(15, 17, 19, 0.4)), url(${piece.coverImage})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }

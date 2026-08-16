@@ -11,7 +11,8 @@
     "payload": "payload",
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "db:push": "tsx scripts/push-schema.ts"
   },
   "dependencies": {
     "@payloadcms/db-sqlite": "^3.88.0",
