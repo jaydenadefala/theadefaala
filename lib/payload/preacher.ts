@@ -1,25 +1,21 @@
 import { getPayloadClient } from "./getPayloadClient";
 import { serializeRichTextToParagraphs } from "./serializeRichText";
 import { pickFeatured } from "./featured";
+import { resolveMediaUrl } from "./media";
 import type { PreacherMessage } from "@/content/preacher";
-import type { PreacherMessage as PreacherMessageDoc, Media } from "@/payload-types";
-
-function resolveAudioUrl(audio: PreacherMessageDoc["audio"]): string | null {
-  if (!audio) return null;
-  if (typeof audio === "object") return (audio as Media).url ?? null;
-  return null;
-}
+import type { PreacherMessage as PreacherMessageDoc } from "@/payload-types";
 
 function toDomain(doc: PreacherMessageDoc): PreacherMessage {
   return {
     slug: doc.slug,
     title: doc.title,
     excerpt: doc.excerpt,
+    coverImage: resolveMediaUrl(doc.coverImage),
     body: serializeRichTextToParagraphs(doc.body),
     scripture: doc.scripture ?? null,
     category: doc.category,
     date: doc.date ?? null,
-    audioSrc: resolveAudioUrl(doc.audio),
+    audioSrc: resolveMediaUrl(doc.audio),
     videoSrc: doc.videoUrl ?? null,
     featured: doc.featured ?? false,
     displayOrder: doc.displayOrder ?? 0,

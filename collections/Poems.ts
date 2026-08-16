@@ -38,6 +38,18 @@ export const Poems: CollectionConfig = {
       fields: [{ name: "text", type: "text", required: true }],
     },
     {
+      name: "coverImage",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "Poem card cover in the horizontal gallery. Optional — falls back to the mood-color gradient." },
+    },
+    {
+      name: "backgroundImage",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "Ambient full-bleed background on the poem's own reading page. Optional." },
+    },
+    {
       name: "audio",
       type: "upload",
       relationTo: "media",

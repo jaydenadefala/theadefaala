@@ -41,7 +41,16 @@ export const Writing: CollectionConfig = {
       type: "text",
       required: true,
       defaultValue: "#c9a24b",
-      admin: { description: "Hex color for the gallery card cover." },
+      admin: {
+        description:
+          "Hex color for the gallery card cover — used as a gradient fallback until a cover image is attached, and blended under the cover image either way.",
+      },
+    },
+    {
+      name: "coverImage",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "Gallery card + detail page cover. Optional — falls back to the accent-color gradient." },
     },
     { name: "body", type: "richText" },
     { name: "featured", type: "checkbox", defaultValue: false },

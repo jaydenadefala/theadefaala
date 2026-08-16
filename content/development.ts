@@ -18,6 +18,10 @@ export interface DevelopmentProject {
   name: string;
   category: ProjectCategory;
   shortDescription: string;
+  /** Real cover image URL, or null — falls back to a plain text card. */
+  coverImage: string | null;
+  /** Additional screenshots/shots for the detail page. */
+  images: string[];
   fullDescription: string;
   role: string;
   technologies: string[];
@@ -36,6 +40,8 @@ export const DEVELOPMENT_PROJECTS: DevelopmentProject[] = [
     category: "Web",
     shortDescription:
       "A design-system-first approach to product UI — tokens before components, components before pages.",
+    coverImage: null,
+    images: [],
     fullDescription: "",
     role: "Design & engineering",
     technologies: ["Next.js", "TypeScript", "Design tokens"],
@@ -52,6 +58,8 @@ export const DEVELOPMENT_PROJECTS: DevelopmentProject[] = [
     category: "Web",
     shortDescription:
       "Interfaces where the animation carries meaning, not decoration bolted on after the fact.",
+    coverImage: null,
+    images: [],
     fullDescription: "",
     role: "Frontend engineering",
     technologies: ["React", "GSAP", "WebGL"],
@@ -68,6 +76,8 @@ export const DEVELOPMENT_PROJECTS: DevelopmentProject[] = [
     category: "Business",
     shortDescription:
       "Replacing a spreadsheet-and-memory workflow with a system that doesn't forget.",
+    coverImage: null,
+    images: [],
     fullDescription: "",
     role: "Systems design",
     technologies: ["Automation", "Internal tooling"],
@@ -85,6 +95,8 @@ export const DEVELOPMENT_PROJECTS: DevelopmentProject[] = [
     category: "Business",
     shortDescription:
       "Turning scattered numbers into a system people actually check before deciding.",
+    coverImage: null,
+    images: [],
     fullDescription: "",
     role: "Product & systems design",
     technologies: ["Data pipelines", "Dashboards"],

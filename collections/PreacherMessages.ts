@@ -21,6 +21,12 @@ export const PreacherMessages: CollectionConfig = {
     { name: "title", type: "text", required: true },
     { name: "slug", type: "text", required: true, unique: true, index: true },
     { name: "excerpt", type: "textarea", required: true },
+    {
+      name: "coverImage",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "Message card + detail page cover. Optional." },
+    },
     { name: "body", type: "richText" },
     { name: "scripture", type: "text" },
     { name: "category", type: "text", required: true, defaultValue: "Message" },

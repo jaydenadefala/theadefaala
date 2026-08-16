@@ -43,6 +43,10 @@ export interface PoemPiece {
   lines: string[];
   /** Path to a voice-recording audio file, or null if not recorded yet. */
   audioSrc: string | null;
+  /** Real cover image URL, or null — falls back to the mood gradient. */
+  coverImage: string | null;
+  /** Ambient full-bleed background for the poem's reading page, or null. */
+  backgroundImage: string | null;
 }
 
 export const POEMS: PoemPiece[] = [
@@ -57,6 +61,8 @@ export const POEMS: PoemPiece[] = [
     displayOrder: 0,
     lines: [],
     audioSrc: null,
+    coverImage: null,
+    backgroundImage: null,
   },
   {
     slug: "her",
@@ -69,6 +75,8 @@ export const POEMS: PoemPiece[] = [
     displayOrder: 1,
     lines: [],
     audioSrc: null,
+    coverImage: null,
+    backgroundImage: null,
   },
   {
     slug: "after",
@@ -81,6 +89,8 @@ export const POEMS: PoemPiece[] = [
     displayOrder: 2,
     lines: [],
     audioSrc: null,
+    coverImage: null,
+    backgroundImage: null,
   },
   {
     slug: "untitled-almost-quit",
@@ -93,6 +103,8 @@ export const POEMS: PoemPiece[] = [
     displayOrder: 3,
     lines: [],
     audioSrc: null,
+    coverImage: null,
+    backgroundImage: null,
   },
   {
     slug: "pulpit-and-pull-requests",
@@ -105,6 +117,8 @@ export const POEMS: PoemPiece[] = [
     displayOrder: 4,
     lines: [],
     audioSrc: null,
+    coverImage: null,
+    backgroundImage: null,
   },
 ];
 

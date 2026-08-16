@@ -1,13 +1,8 @@
 import { getPayloadClient } from "./getPayloadClient";
 import { pickFeatured } from "./featured";
+import { resolveMediaUrl } from "./media";
 import type { PoemPiece } from "@/content/poetry";
-import type { Poem as PoemDoc, Media } from "@/payload-types";
-
-function resolveAudioUrl(audio: PoemDoc["audio"]): string | null {
-  if (!audio) return null;
-  if (typeof audio === "object") return (audio as Media).url ?? null;
-  return null; // unresolved relation ID — caller didn't request depth
-}
+import type { Poem as PoemDoc } from "@/payload-types";
 
 function toDomain(doc: PoemDoc): PoemPiece {
   return {
@@ -20,7 +15,9 @@ function toDomain(doc: PoemDoc): PoemPiece {
     featured: doc.featured ?? false,
     displayOrder: doc.displayOrder ?? 0,
     lines: (doc.lines ?? []).map((l) => l.text),
-    audioSrc: resolveAudioUrl(doc.audio),
+    audioSrc: resolveMediaUrl(doc.audio),
+    coverImage: resolveMediaUrl(doc.coverImage),
+    backgroundImage: resolveMediaUrl(doc.backgroundImage),
   };
 }
 

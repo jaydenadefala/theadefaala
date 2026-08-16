@@ -181,9 +181,13 @@ export interface Writing {
   excerpt: string;
   category: 'Essay' | 'Reflection' | 'Poem';
   /**
-   * Hex color for the gallery card cover.
+   * Hex color for the gallery card cover — used as a gradient fallback until a cover image is attached, and blended under the cover image either way.
    */
   accent: string;
+  /**
+   * Gallery card + detail page cover. Optional — falls back to the accent-color gradient.
+   */
+  coverImage?: (number | null) | Media;
   body?: {
     root: {
       type: string;
@@ -225,6 +229,14 @@ export interface Poem {
       }[]
     | null;
   /**
+   * Poem card cover in the horizontal gallery. Optional — falls back to the mood-color gradient.
+   */
+  coverImage?: (number | null) | Media;
+  /**
+   * Ambient full-bleed background on the poem's own reading page. Optional.
+   */
+  backgroundImage?: (number | null) | Media;
+  /**
    * Voice recording of this poem.
    */
   audio?: (number | null) | Media;
@@ -244,6 +256,19 @@ export interface DevelopmentProject {
   slug: string;
   category: 'Web' | 'Business';
   shortDescription: string;
+  /**
+   * Project card cover. Optional — falls back to a plain text card.
+   */
+  coverImage?: (number | null) | Media;
+  /**
+   * Additional screenshots/shots shown on the project's detail page.
+   */
+  images?:
+    | {
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
   fullDescription?: {
     root: {
       type: string;
@@ -284,6 +309,10 @@ export interface PreacherMessage {
   title: string;
   slug: string;
   excerpt: string;
+  /**
+   * Message card + detail page cover. Optional.
+   */
+  coverImage?: (number | null) | Media;
   body?: {
     root: {
       type: string;
@@ -454,6 +483,7 @@ export interface WritingSelect<T extends boolean = true> {
   excerpt?: T;
   category?: T;
   accent?: T;
+  coverImage?: T;
   body?: T;
   featured?: T;
   displayOrder?: T;
@@ -476,6 +506,8 @@ export interface PoemsSelect<T extends boolean = true> {
         text?: T;
         id?: T;
       };
+  coverImage?: T;
+  backgroundImage?: T;
   audio?: T;
   featured?: T;
   displayOrder?: T;
@@ -492,6 +524,13 @@ export interface DevelopmentProjectsSelect<T extends boolean = true> {
   slug?: T;
   category?: T;
   shortDescription?: T;
+  coverImage?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
   fullDescription?: T;
   role?: T;
   technologies?:
@@ -517,6 +556,7 @@ export interface PreacherMessagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   excerpt?: T;
+  coverImage?: T;
   body?: T;
   scripture?: T;
   category?: T;

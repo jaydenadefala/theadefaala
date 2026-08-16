@@ -20,6 +20,8 @@ export interface WritingPiece {
   category: WritingCategory;
   /** Hex accent used for the card's cover treatment in the gallery. */
   accent: string;
+  /** Real cover image URL, or null — falls back to the accent gradient. */
+  coverImage: string | null;
   status: ContentStatus;
   publishedAt: string | null;
   featured: boolean;
@@ -36,6 +38,7 @@ export const WRITING_PIECES: WritingPiece[] = [
       "The work you do when no one's checking is the only work that's really yours.",
     category: "Essay",
     accent: "#c9a24b",
+    coverImage: null,
     status: "draft",
     publishedAt: null,
     featured: true,
@@ -48,6 +51,7 @@ export const WRITING_PIECES: WritingPiece[] = [
     excerpt: "A working inventory, updated as it changes.",
     category: "Reflection",
     accent: "#8fa896",
+    coverImage: null,
     status: "draft",
     publishedAt: null,
     featured: false,
@@ -60,6 +64,7 @@ export const WRITING_PIECES: WritingPiece[] = [
     excerpt: "A poem, not yet ready to leave the room it was written in.",
     category: "Poem",
     accent: "#a7a49c",
+    coverImage: null,
     status: "draft",
     publishedAt: null,
     featured: false,
@@ -72,6 +77,7 @@ export const WRITING_PIECES: WritingPiece[] = [
     excerpt: "Two kinds of work that turned out to need the same hands.",
     category: "Essay",
     accent: "#c9a24b",
+    coverImage: null,
     status: "draft",
     publishedAt: null,
     featured: false,
@@ -84,6 +90,7 @@ export const WRITING_PIECES: WritingPiece[] = [
     excerpt: "On sitting with a thing before it's ready to be said.",
     category: "Reflection",
     accent: "#8fa896",
+    coverImage: null,
     status: "draft",
     publishedAt: null,
     featured: false,

@@ -27,6 +27,19 @@ export const DevelopmentProjects: CollectionConfig = {
       options: ["Web", "Business"],
     },
     { name: "shortDescription", type: "textarea", required: true },
+    {
+      name: "coverImage",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "Project card cover. Optional — falls back to a plain text card." },
+    },
+    {
+      name: "images",
+      type: "array",
+      labels: { singular: "Image", plural: "Images" },
+      fields: [{ name: "image", type: "upload", relationTo: "media", required: true }],
+      admin: { description: "Additional screenshots/shots shown on the project's detail page." },
+    },
     { name: "fullDescription", type: "richText" },
     { name: "role", type: "text", required: true },
     {

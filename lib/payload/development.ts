@@ -1,6 +1,7 @@
 import { getPayloadClient } from "./getPayloadClient";
 import { serializeRichTextToParagraphs } from "./serializeRichText";
 import { pickFeatured } from "./featured";
+import { resolveMediaUrl } from "./media";
 import type { DevelopmentProject, ProjectCategory } from "@/content/development";
 import type { DevelopmentProject as DevelopmentProjectDoc } from "@/payload-types";
 
@@ -10,6 +11,10 @@ function toDomain(doc: DevelopmentProjectDoc): DevelopmentProject {
     name: doc.name,
     category: doc.category,
     shortDescription: doc.shortDescription,
+    coverImage: resolveMediaUrl(doc.coverImage),
+    images: (doc.images ?? [])
+      .map((entry) => resolveMediaUrl(entry.image))
+      .filter((url): url is string => url !== null),
     fullDescription: serializeRichTextToParagraphs(doc.fullDescription).join("\n\n"),
     role: doc.role,
     technologies: (doc.technologies ?? []).map((t) => t.value),
@@ -27,6 +32,7 @@ export async function getDevelopmentProjects(): Promise<DevelopmentProject[]> {
   const result = await payload.find({
     collection: "development-projects",
     sort: "displayOrder",
+    depth: 1,
     limit: 100,
   });
   return result.docs.map(toDomain);
@@ -48,6 +54,7 @@ export async function getProject(
   const result = await payload.find({
     collection: "development-projects",
     where: { slug: { equals: slug } },
+    depth: 1,
     limit: 1,
   });
   const doc = result.docs[0];

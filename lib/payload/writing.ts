@@ -1,6 +1,7 @@
 import { getPayloadClient } from "./getPayloadClient";
 import { serializeRichTextToParagraphs } from "./serializeRichText";
 import { pickFeatured } from "./featured";
+import { resolveMediaUrl } from "./media";
 import type { WritingPiece } from "@/content/writing";
 import type { Writing as WritingDoc } from "@/payload-types";
 
@@ -26,6 +27,7 @@ function toDomain(doc: WritingDoc): WritingPiece {
     excerpt: doc.excerpt,
     category: doc.category,
     accent: doc.accent,
+    coverImage: resolveMediaUrl(doc.coverImage),
     status: doc._status === "published" ? "published" : "draft",
     // Payload's native draft system doesn't track a first-published
     // timestamp out of the box; approximating with updatedAt for
@@ -43,6 +45,7 @@ export async function getWritingPieces(): Promise<WritingPiece[]> {
   const result = await payload.find({
     collection: "writing",
     sort: "displayOrder",
+    depth: 1,
     limit: 100,
   });
   return result.docs.map(toDomain);
@@ -55,6 +58,7 @@ export async function getWritingPiece(
   const result = await payload.find({
     collection: "writing",
     where: { slug: { equals: slug } },
+    depth: 1,
     limit: 1,
   });
   const doc = result.docs[0];

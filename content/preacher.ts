@@ -12,6 +12,8 @@ export interface PreacherMessage {
   slug: string;
   title: string;
   excerpt: string;
+  /** Real cover image URL, or null. */
+  coverImage: string | null;
   /** Paragraphs. Empty until published. */
   body: string[];
   scripture: string | null;
@@ -29,6 +31,7 @@ export const PREACHER_MESSAGES: PreacherMessage[] = [
     slug: "the-first-message",
     title: "The first message",
     excerpt: "Where this chapter actually starts.",
+    coverImage: null,
     body: [],
     scripture: null,
     category: "Message",
@@ -43,6 +46,7 @@ export const PREACHER_MESSAGES: PreacherMessage[] = [
     slug: "sunday-i-almost-skipped",
     title: "Notes from a Sunday I almost skipped",
     excerpt: "On showing up anyway.",
+    coverImage: null,
     body: [],
     scripture: null,
     category: "Reflection",
@@ -57,6 +61,7 @@ export const PREACHER_MESSAGES: PreacherMessage[] = [
     slug: "building-and-believing",
     title: "On building and believing at the same time",
     excerpt: "Two things that turned out not to compete.",
+    coverImage: null,
     body: [],
     scripture: null,
     category: "Reflection",
