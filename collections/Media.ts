@@ -40,5 +40,12 @@ export const Media: CollectionConfig = {
         position: "centre",
       },
     ],
+    // Scoped to what this collection is actually used for — cover/
+    // background images (Writing/Poems/DevelopmentProjects/
+    // PreacherMessages) and voice-recording audio (Poems/
+    // PreacherMessages `audio` fields both relate here too). Without
+    // this, create access (any authenticated user — server-enforced,
+    // not client-only) could upload an arbitrary file type.
+    mimeTypes: ["image/*", "audio/*"],
   },
 };
