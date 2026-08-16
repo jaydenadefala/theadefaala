@@ -50,6 +50,13 @@ export default async function DevelopmentDetailPage({ params }: PageProps) {
       </header>
 
       <article>
+        {project.coverImage && (
+          <div className={styles.coverImage}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={project.coverImage} alt="" />
+          </div>
+        )}
+
         <div className={styles.hero}>
           <span className={styles.category}>{project.category}</span>
           <h1 className={styles.title}>{project.name}</h1>
@@ -113,6 +120,15 @@ export default async function DevelopmentDetailPage({ params }: PageProps) {
               The full write-up for this one isn&rsquo;t published yet —
               this page exists so it has a real home the moment it is.
             </p>
+          </div>
+        )}
+
+        {project.images.length > 0 && (
+          <div className={styles.gallery}>
+            {project.images.map((src, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img key={src + i} src={src} alt="" />
+            ))}
           </div>
         )}
       </article>

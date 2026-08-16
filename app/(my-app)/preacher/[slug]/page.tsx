@@ -51,6 +51,13 @@ export default async function PreacherDetailPage({ params }: PageProps) {
       </header>
 
       <article>
+        {message.coverImage && (
+          <div className={styles.coverImage}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={message.coverImage} alt="" />
+          </div>
+        )}
+
         <div className={styles.hero}>
           <span className={styles.category}>{message.category}</span>
           <h1 className={styles.title}>{message.title}</h1>

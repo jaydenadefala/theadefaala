@@ -44,11 +44,19 @@ export default function PreacherList({ messages }: PreacherListProps) {
             if (el) itemRefs.current.push(el);
           }}
         >
-          <span className={styles.entryStatus}>
-            {message.category}
-            {message.status === "draft" ? " · Coming soon" : ""}
+          {message.coverImage && (
+            <span className={styles.entryThumb}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={message.coverImage} alt="" />
+            </span>
+          )}
+          <span className={styles.entryBody}>
+            <span className={styles.entryStatus}>
+              {message.category}
+              {message.status === "draft" ? " · Coming soon" : ""}
+            </span>
+            <h2 className={styles.entryTitle}>{message.title}</h2>
           </span>
-          <h2 className={styles.entryTitle}>{message.title}</h2>
         </Link>
       ))}
     </section>

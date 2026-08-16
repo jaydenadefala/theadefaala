@@ -31,6 +31,20 @@
   color: var(--fg);
 }
 
+.coverImage {
+  max-width: 960px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: clamp(2rem, 5vh, 3rem);
+}
+
+.coverImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .hero {
   max-width: 680px;
 }
@@ -145,6 +159,21 @@
   font-size: 1rem;
   line-height: 1.7;
   color: var(--fg-muted);
+}
+
+.gallery {
+  margin-top: clamp(2.5rem, 6vh, 4rem);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  max-width: 960px;
+}
+
+.gallery img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-md);
 }
 
 .nav {

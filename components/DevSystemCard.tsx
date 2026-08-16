@@ -78,18 +78,26 @@ export default function DevSystemCard({ project }: DevSystemCardProps) {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        <span className={styles.status}>
-          <span className={styles.statusDot} aria-hidden="true" />
-          {project.status === "published" ? "Live" : "In progress"}
-        </span>
-        <h3 className={styles.name}>{project.name}</h3>
-        <p className={styles.description}>{project.shortDescription}</p>
-        <ul className={styles.tags}>
-          {project.technologies.map((tech) => (
-            <li key={tech}>{tech}</li>
-          ))}
-        </ul>
-        <span className={styles.role}>{project.role}</span>
+        {project.coverImage && (
+          <div className={styles.cover}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={project.coverImage} alt="" className={styles.coverImg} />
+          </div>
+        )}
+        <div className={styles.content}>
+          <span className={styles.status}>
+            <span className={styles.statusDot} aria-hidden="true" />
+            {project.status === "published" ? "Live" : "In progress"}
+          </span>
+          <h3 className={styles.name}>{project.name}</h3>
+          <p className={styles.description}>{project.shortDescription}</p>
+          <ul className={styles.tags}>
+            {project.technologies.map((tech) => (
+              <li key={tech}>{tech}</li>
+            ))}
+          </ul>
+          <span className={styles.role}>{project.role}</span>
+        </div>
       </Link>
     </div>
   );
