@@ -6,6 +6,7 @@ import {
   getProject,
   getAdjacentProjects,
 } from "@/lib/payload/development";
+import { buildMetadata } from "@/lib/seo";
 import styles from "./development-detail.module.css";
 
 interface PageProps {
@@ -25,10 +26,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = await getProject(slug);
   if (!project) return {};
-  return {
+  return buildMetadata({
     title: `${project.name} — theAdefala`,
     description: project.shortDescription,
-  };
+    path: `/development/${slug}`,
+    image: project.coverImage,
+    type: "article",
+  });
 }
 
 export default async function DevelopmentDetailPage({ params }: PageProps) {

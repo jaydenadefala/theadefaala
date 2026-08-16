@@ -6,6 +6,7 @@ import {
   getMessage,
   getAdjacentMessages,
 } from "@/lib/payload/preacher";
+import { buildMetadata } from "@/lib/seo";
 import AudioPlayer from "@/components/AudioPlayer";
 import styles from "./preacher-detail.module.css";
 
@@ -26,10 +27,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const message = await getMessage(slug);
   if (!message) return {};
-  return {
+  return buildMetadata({
     title: `${message.title} — theAdefala`,
     description: message.excerpt,
-  };
+    path: `/preacher/${slug}`,
+    image: message.coverImage,
+    type: "article",
+  });
 }
 
 export default async function PreacherDetailPage({ params }: PageProps) {

@@ -6,6 +6,7 @@ import {
   getWritingPiece,
   getAdjacentWritingPieces,
 } from "@/lib/payload/writing";
+import { buildMetadata } from "@/lib/seo";
 import styles from "./writing-detail.module.css";
 
 interface PageProps {
@@ -25,10 +26,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const piece = await getWritingPiece(slug);
   if (!piece) return {};
-  return {
+  return buildMetadata({
     title: `${piece.title} — theAdefala`,
     description: piece.excerpt,
-  };
+    path: `/writing/${slug}`,
+    image: piece.coverImage,
+    type: "article",
+  });
 }
 
 export default async function WritingDetailPage({ params }: PageProps) {

@@ -4,13 +4,20 @@ import Scene from "@/components/three/Scene";
 import WritingGalleryScene from "@/components/three/writing/WritingGalleryScene";
 import WritingGalleryFallback from "./WritingGalleryFallback";
 import { getWritingPieces } from "@/lib/payload/writing";
+import { buildMetadata } from "@/lib/seo";
+import { pickFeatured } from "@/lib/payload/featured";
 import styles from "./writing.module.css";
 
-export const metadata: Metadata = {
-  title: "Writing — theAdefala",
-  description:
-    "Essays, reflections, and poems by theAdefala — a working archive, not a highlight reel.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const pieces = await getWritingPieces();
+  return buildMetadata({
+    title: "Writing — theAdefala",
+    description:
+      "Essays, reflections, and poems by theAdefala — a working archive, not a highlight reel.",
+    path: "/writing",
+    image: pickFeatured(pieces)?.coverImage,
+  });
+}
 
 export const revalidate = 60;
 

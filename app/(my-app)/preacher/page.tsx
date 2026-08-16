@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getMessages } from "@/lib/payload/preacher";
+import { buildMetadata } from "@/lib/seo";
+import { pickFeatured } from "@/lib/payload/featured";
 import PreacherList from "./PreacherList";
 import styles from "./preacher.module.css";
 
-export const metadata: Metadata = {
-  title: "Preacher — theAdefala",
-  description:
-    "Not a brand pillar — a starting point. Reflections and messages by theAdefala.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const messages = await getMessages();
+  return buildMetadata({
+    title: "Preacher — theAdefala",
+    description:
+      "Not a brand pillar — a starting point. Reflections and messages by theAdefala.",
+    path: "/preacher",
+    image: pickFeatured(messages)?.coverImage,
+  });
+}
 
 export const revalidate = 60;
 

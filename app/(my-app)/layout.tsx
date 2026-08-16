@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Fraunces } from "next/font/google";
 import { getSiteSettings, getHomepageSettings } from "@/lib/payload/settings";
+import { buildMetadata } from "@/lib/seo";
+import { SITE_URL } from "@/lib/siteUrl";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,9 +27,17 @@ export async function generateMetadata(): Promise<Metadata> {
     getSiteSettings(),
     getHomepageSettings(),
   ]);
+  const title = `${site.siteTitle} — ${homepage.identityRoles.join(" · ")}`;
+
   return {
-    title: `${site.siteTitle} — ${homepage.identityRoles.join(" · ")}`,
-    description: site.siteDescription,
+    metadataBase: new URL(SITE_URL),
+    ...buildMetadata({
+      title,
+      description: site.siteDescription,
+      path: "/",
+      image: site.profileImage,
+      siteName: site.siteTitle,
+    }),
   };
 }
 

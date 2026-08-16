@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import DevSystemGrid from "@/components/DevSystemGrid";
-import { getProjectsByCategory } from "@/lib/payload/development";
+import { getDevelopmentProjects, getProjectsByCategory } from "@/lib/payload/development";
+import { buildMetadata } from "@/lib/seo";
+import { pickFeatured } from "@/lib/payload/featured";
 import styles from "./development.module.css";
 
-export const metadata: Metadata = {
-  title: "Development — theAdefala",
-  description:
-    "Web and business systems by theAdefala — what's built, how it's built, and why it matters.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const projects = await getDevelopmentProjects();
+  return buildMetadata({
+    title: "Development — theAdefala",
+    description:
+      "Web and business systems by theAdefala — what's built, how it's built, and why it matters.",
+    path: "/development",
+    image: pickFeatured(projects)?.coverImage,
+  });
+}
 
 const PRINCIPLES = [
   "Start from the constraint, not the template.",

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MOOD_STYLES } from "@/content/poetry";
 import { getPoems, getPoem, getAdjacentPoems } from "@/lib/payload/poems";
+import { buildMetadata } from "@/lib/seo";
 import AudioPlayer from "@/components/AudioPlayer";
 import styles from "./poetry-detail.module.css";
 
@@ -23,10 +24,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const poem = await getPoem(slug);
   if (!poem) return {};
-  return {
+  return buildMetadata({
     title: `${poem.title} — theAdefala`,
     description: poem.excerpt,
-  };
+    path: `/poetry/${slug}`,
+    image: poem.coverImage,
+    type: "article",
+  });
 }
 
 export default async function PoemDetailPage({ params }: PageProps) {

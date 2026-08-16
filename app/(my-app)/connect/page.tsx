@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getSiteSettings } from "@/lib/payload/settings";
+import { buildMetadata } from "@/lib/seo";
 import styles from "./connect.module.css";
 
-export const metadata: Metadata = {
-  title: "Connect — theAdefala",
-  description: "Get in touch with theAdefala.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { profileImage } = await getSiteSettings();
+  return buildMetadata({
+    title: "Connect — theAdefala",
+    description: "Get in touch with theAdefala.",
+    path: "/connect",
+    image: profileImage,
+  });
+}
 
 export const revalidate = 60;
 
