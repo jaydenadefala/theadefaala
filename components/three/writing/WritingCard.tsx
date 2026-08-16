@@ -64,6 +64,8 @@ export default function WritingCard({
           onClick={handleClick}
           onPointerOver={() => onHover(piece.slug)}
           onPointerOut={() => onHover(null)}
+          onFocus={() => onHover(piece.slug)}
+          onBlur={() => onHover(null)}
         >
           <span className={styles.kind}>{piece.category}</span>
           <span className={styles.title}>{piece.title}</span>
