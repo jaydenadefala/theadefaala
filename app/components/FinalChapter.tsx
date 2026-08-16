@@ -5,7 +5,23 @@ import { useRef } from "react";
 import { useScrollReveal } from "@/lib/motion/useScrollReveal";
 import styles from "./FinalChapter.module.css";
 
-export default function FinalChapter() {
+interface FinalChapterProps {
+  email: string;
+  identityRoles: string[];
+  ctaHeadline: string;
+  ctaButtonText: string;
+  ctaSecondaryText: string;
+  copyrightName: string;
+}
+
+export default function FinalChapter({
+  email,
+  identityRoles,
+  ctaHeadline,
+  ctaButtonText,
+  ctaSecondaryText,
+  copyrightName,
+}: FinalChapterProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const kickerRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -30,26 +46,23 @@ export default function FinalChapter() {
       </div>
 
       <h2 ref={headlineRef} className={styles.headline}>
-        If any of this resonated, let&rsquo;s talk.
+        {ctaHeadline}
       </h2>
 
       <div ref={actionsRef} className={styles.actions}>
         <Link href="/connect" className={styles.primary}>
-          Say hello
+          {ctaButtonText}
         </Link>
-        <a
-          href="mailto:jaydenadefala@gmail.com"
-          className={styles.secondary}
-        >
-          or email directly
+        <a href={`mailto:${email}`} className={styles.secondary}>
+          {ctaSecondaryText}
         </a>
       </div>
 
       <div ref={footerRef} className={styles.footer}>
-        <span className={styles.identities}>
-          Developer · Writer · Poet · Preacher
+        <span className={styles.identities}>{identityRoles.join(" · ")}</span>
+        <span className={styles.copyright}>
+          © {new Date().getFullYear()} {copyrightName}
         </span>
-        <span className={styles.copyright}>© 2026 theAdefala</span>
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getSiteSettings } from "@/lib/payload/settings";
 import styles from "./connect.module.css";
 
 export const metadata: Metadata = {
@@ -7,7 +8,11 @@ export const metadata: Metadata = {
   description: "Get in touch with theAdefala.",
 };
 
-export default function ConnectPage() {
+export const revalidate = 60;
+
+export default async function ConnectPage() {
+  const { email } = await getSiteSettings();
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -24,8 +29,8 @@ export default function ConnectPage() {
         <h1 className={styles.title}>
           Say the thing you came here to say.
         </h1>
-        <a href="mailto:jaydenadefala@gmail.com" className={styles.email}>
-          jaydenadefala@gmail.com
+        <a href={`mailto:${email}`} className={styles.email}>
+          {email}
         </a>
         <p className={styles.note}>
           Work inquiries, writing, speaking, or just to say something

@@ -44,7 +44,12 @@ function CameraRig({ isDesktop }: { isDesktop: boolean }) {
   return null;
 }
 
-export default function OpeningSceneR3F() {
+interface OpeningSceneR3FProps {
+  name: string;
+  roles: string[];
+}
+
+export default function OpeningSceneR3F({ name, roles }: OpeningSceneR3FProps) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [settled, setSettled] = useState(false);
 
@@ -238,6 +243,8 @@ export default function OpeningSceneR3F() {
         <Html center wrapperClass="opening-html-overlay">
           <div style={{ width: "min(90vw, 460px)" }}>
             <IdentityOverlay
+              name={name}
+              roles={roles}
               letterRefs={letterRefs}
               labelRefs={labelRefs}
               cursorRef={cursorRef}

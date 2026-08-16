@@ -11,6 +11,8 @@ import { Writing } from "./collections/Writing";
 import { Poems } from "./collections/Poems";
 import { DevelopmentProjects } from "./collections/DevelopmentProjects";
 import { PreacherMessages } from "./collections/PreacherMessages";
+import { SiteSettings } from "./globals/SiteSettings";
+import { HomepageSettings } from "./globals/HomepageSettings";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -34,6 +36,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Writing, Poems, DevelopmentProjects, PreacherMessages],
+  globals: [SiteSettings, HomepageSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {

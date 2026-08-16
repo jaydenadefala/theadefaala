@@ -8,13 +8,21 @@ import styles from "./OpeningSceneFallback.module.css";
 
 const PHOTO_SRC = "/images/hero.jpg";
 
+interface OpeningSceneFallbackProps {
+  name: string;
+  roles: string[];
+}
+
 /**
  * Pure DOM/CSS opening sequence — the Scene fallback for devices without
  * real WebGL and for prefers-reduced-motion. This is the original
  * Milestone-phase-1 implementation, unchanged in behavior; only the
  * name/label markup now comes from the shared IdentityOverlay.
  */
-export default function OpeningSceneFallback() {
+export default function OpeningSceneFallback({
+  name,
+  roles,
+}: OpeningSceneFallbackProps) {
   const stageRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const photoWrapRef = useRef<HTMLDivElement>(null);
@@ -193,6 +201,8 @@ export default function OpeningSceneFallback() {
         </div>
 
         <IdentityOverlay
+          name={name}
+          roles={roles}
           letterRefs={letterRefs}
           labelRefs={labelRefs}
           cursorRef={cursorRef}

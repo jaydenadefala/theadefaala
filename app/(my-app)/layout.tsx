@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Fraunces } from "next/font/google";
+import { getSiteSettings, getHomepageSettings } from "@/lib/payload/settings";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,11 +20,16 @@ const fraunces = Fraunces({
   style: ["normal", "italic"],
 });
 
-export const metadata: Metadata = {
-  title: "theAdefala — Developer · Writer · Poet · Preacher",
-  description:
-    "The personal universe of theAdefala: developer, writer, poet, and preacher.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [site, homepage] = await Promise.all([
+    getSiteSettings(),
+    getHomepageSettings(),
+  ]);
+  return {
+    title: `${site.siteTitle} — ${homepage.identityRoles.join(" · ")}`,
+    description: site.siteDescription,
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#08090b",
