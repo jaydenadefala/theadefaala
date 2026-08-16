@@ -34,6 +34,11 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      // Renders above Payload's own default collection-list dashboard,
+      // not in place of it — see components/admin/DashboardOverview.tsx.
+      beforeDashboard: ["@/components/admin/DashboardOverview#DashboardOverview"],
+    },
   },
   collections: [Users, Media, Writing, Poems, DevelopmentProjects, PreacherMessages],
   globals: [SiteSettings, HomepageSettings],

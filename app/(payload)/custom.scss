@@ -1,2 +1,62 @@
-// Admin panel style overrides go here. Empty for now — the default
-// Payload admin theme is untouched.
+// Admin panel style overrides go here. The default Payload admin
+// theme is otherwise untouched — these rules scope only to the
+// custom DashboardOverview component (admin.components.beforeDashboard).
+
+.ta-dashboard {
+  margin-bottom: 2rem;
+
+  &__heading {
+    margin-bottom: 1rem;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.25rem;
+    border-radius: 6px;
+    border: 1px solid var(--theme-elevation-150);
+    background: var(--theme-elevation-50);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease;
+
+    &:hover {
+      border-color: var(--theme-elevation-400);
+    }
+  }
+
+  &__cardLabel {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--theme-elevation-500);
+  }
+
+  &__cardCount {
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+
+  &__cardBreakdown {
+    font-size: 0.8rem;
+    color: var(--theme-elevation-500);
+  }
+
+  &__quickLinks {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 1rem;
+
+    a {
+      font-size: 0.85rem;
+      text-decoration: underline;
+    }
+  }
+}
