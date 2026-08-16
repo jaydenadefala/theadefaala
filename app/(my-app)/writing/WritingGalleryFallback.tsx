@@ -28,7 +28,7 @@ export default function WritingGalleryFallback({
           <span className={styles.pieceThumb}>
             {piece.coverImage && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={piece.coverImage} alt="" />
+              <img src={piece.coverImage} alt="" loading="lazy" />
             )}
           </span>
           <span className={styles.pieceKind}>{piece.category}</span>

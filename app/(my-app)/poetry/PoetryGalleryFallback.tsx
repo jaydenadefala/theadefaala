@@ -34,7 +34,12 @@ export default function PoetryGalleryFallback({ poems }: PoetryGalleryFallbackPr
             >
               {piece.coverImage && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={piece.coverImage} alt="" className={styles.coverImg} />
+                <img
+                  src={piece.coverImage}
+                  alt=""
+                  className={styles.coverImg}
+                  loading="lazy"
+                />
               )}
             </div>
             <span className={styles.title}>{piece.title}</span>

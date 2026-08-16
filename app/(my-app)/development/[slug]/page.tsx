@@ -131,7 +131,7 @@ export default async function DevelopmentDetailPage({ params }: PageProps) {
           <div className={styles.gallery}>
             {project.images.map((src, i) => (
               // eslint-disable-next-line @next/next/no-img-element
-              <img key={src + i} src={src} alt="" />
+              <img key={src + i} src={src} alt="" loading="lazy" />
             ))}
           </div>
         )}

@@ -47,7 +47,7 @@ export default function PreacherList({ messages }: PreacherListProps) {
           {message.coverImage && (
             <span className={styles.entryThumb}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={message.coverImage} alt="" />
+              <img src={message.coverImage} alt="" loading="lazy" />
             </span>
           )}
           <span className={styles.entryBody}>

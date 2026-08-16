@@ -81,7 +81,12 @@ export default function DevSystemCard({ project }: DevSystemCardProps) {
         {project.coverImage && (
           <div className={styles.cover}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={project.coverImage} alt="" className={styles.coverImg} />
+            <img
+              src={project.coverImage}
+              alt=""
+              className={styles.coverImg}
+              loading="lazy"
+            />
           </div>
         )}
         <div className={styles.content}>
