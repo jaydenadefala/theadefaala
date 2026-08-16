@@ -3,6 +3,7 @@
 import SceneObject from "@/components/three/SceneObject";
 import { useChapterTransition } from "@/lib/motion/useChapterTransition";
 import { makeCardCoverTexture } from "@/lib/three/makeCardCoverTexture";
+import { useImageTexture } from "@/lib/three/useImageTexture";
 import { makeRoundedRectMask } from "@/lib/three/makeRoundedRectMask";
 import type { PoemPiece, MoodStyle } from "@/content/poetry";
 import styles from "./PoemCard.module.css";
@@ -20,7 +21,11 @@ const HEIGHT = WIDTH * 0.62;
 export default function PoemCard({ piece, mood, slotX, isActive }: PoemCardProps) {
   const href = `/poetry/${piece.slug}`;
   const handleClick = useChapterTransition(href);
-  const texture = makeCardCoverTexture(mood.accent);
+  // Real uploaded cover wins when present; the mood-color gradient is
+  // the fallback for poems that don't have one yet.
+  const imageTexture = useImageTexture(piece.coverImage, WIDTH / HEIGHT);
+  const gradientTexture = makeCardCoverTexture(mood.accent);
+  const texture = imageTexture ?? gradientTexture;
   const mask = makeRoundedRectMask(0.06);
 
   return (

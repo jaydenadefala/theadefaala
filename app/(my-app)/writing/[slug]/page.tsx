@@ -51,9 +51,17 @@ export default async function WritingDetailPage({ params }: PageProps) {
 
       <div
         className={styles.cover}
-        style={{
-          background: `linear-gradient(155deg, ${piece.accent}, var(--bg-soft))`,
-        }}
+        style={
+          piece.coverImage
+            ? {
+                backgroundImage: `linear-gradient(155deg, ${piece.accent}22, var(--bg-soft)66), url(${piece.coverImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : {
+                background: `linear-gradient(155deg, ${piece.accent}, var(--bg-soft))`,
+              }
+        }
         aria-hidden="true"
       />
 

@@ -42,6 +42,13 @@ export default async function PoemDetailPage({ params }: PageProps) {
       className={styles.page}
       style={{ background: mood.background }}
     >
+      {poem.backgroundImage && (
+        <div
+          className={styles.ambientImage}
+          style={{ backgroundImage: `url(${poem.backgroundImage})` }}
+          aria-hidden="true"
+        />
+      )}
       <div
         className={styles.ambient}
         style={{

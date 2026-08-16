@@ -31,7 +31,12 @@ export default function PoetryGalleryFallback({ poems }: PoetryGalleryFallbackPr
                 background: `linear-gradient(155deg, ${mood.accent}, ${mood.background})`,
               }}
               aria-hidden="true"
-            />
+            >
+              {piece.coverImage && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={piece.coverImage} alt="" className={styles.coverImg} />
+              )}
+            </div>
             <span className={styles.title}>{piece.title}</span>
             <span className={styles.excerpt}>{piece.excerpt}</span>
           </Link>

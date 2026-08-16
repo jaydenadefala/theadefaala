@@ -3,6 +3,7 @@
 import SceneObject from "@/components/three/SceneObject";
 import { useChapterTransition } from "@/lib/motion/useChapterTransition";
 import { makeCardCoverTexture } from "@/lib/three/makeCardCoverTexture";
+import { useImageTexture } from "@/lib/three/useImageTexture";
 import { makeRoundedRectMask } from "@/lib/three/makeRoundedRectMask";
 import type { WritingPiece } from "@/content/writing";
 import styles from "./WritingCard.module.css";
@@ -29,7 +30,12 @@ export default function WritingCard({
 }: WritingCardProps) {
   const href = `/writing/${piece.slug}`;
   const handleClick = useChapterTransition(href);
-  const texture = makeCardCoverTexture(piece.accent);
+  // Real uploaded cover wins when present; the procedural accent
+  // gradient is the fallback for pieces that don't have one yet, not
+  // a placeholder waiting to be replaced by fabricated art.
+  const imageTexture = useImageTexture(piece.coverImage, WIDTH / HEIGHT);
+  const gradientTexture = makeCardCoverTexture(piece.accent);
+  const texture = imageTexture ?? gradientTexture;
   const mask = makeRoundedRectMask(0.1);
 
   return (

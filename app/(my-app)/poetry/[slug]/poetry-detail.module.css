@@ -8,6 +8,16 @@
   overflow: hidden;
 }
 
+.ambientImage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.32;
+  filter: saturate(0.75);
+}
+
 .ambient {
   position: absolute;
   inset: 0;

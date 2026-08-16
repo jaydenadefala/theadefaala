@@ -25,6 +25,12 @@ export default function WritingGalleryFallback({
           href={`/writing/${piece.slug}`}
           className={styles.piece}
         >
+          <span className={styles.pieceThumb}>
+            {piece.coverImage && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={piece.coverImage} alt="" />
+            )}
+          </span>
           <span className={styles.pieceKind}>{piece.category}</span>
           <h2 className={styles.pieceTitle}>{piece.title}</h2>
           <span className={styles.pieceStatus}>
