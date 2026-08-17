@@ -119,17 +119,43 @@ compiles and type-checks cleanly and mirrors the SQLite adapter's shape
 exactly, but treat it as code-ready, not yet verified end-to-end, until
 someone runs it against a real Postgres database once.
 
-### Media storage
+### Production media storage: Cloudflare R2 (S3-compatible)
 
-Uploads (`collections/Media.ts`) currently write to local disk
-(`upload.staticDir: "media"`, gitignored). Like SQLite, this works for local
-dev but **is not durable on most production hosts** — local disk writes on
-serverless/ephemeral-filesystem platforms will not persist or will not be
-shared across instances. Before a real deployment, `Media`'s `upload` config
-needs a cloud storage adapter (Payload supports S3, Vercel Blob, Google
-Cloud Storage, and others via `@payloadcms/storage-*` packages) instead of
-`staticDir`. Not yet implemented — flagging as a real pre-deployment
-requirement, not a nice-to-have.
+Uploads (`collections/Media.ts`) write to local disk (`upload.staticDir:
+"media"`, gitignored) **only when no S3-compatible storage is configured** —
+that's the local dev default, and it works fine there. Like SQLite, local
+disk is not durable on most production hosts (ephemeral/non-shared
+filesystems), so production needs real object storage.
+
+`payload.config.ts` registers `@payloadcms/storage-s3` (Payload's official
+S3-compatible storage plugin) and switches Media over to it automatically
+based on whether these four env vars are all set:
+
+- `S3_BUCKET`
+- `S3_ENDPOINT` — for Cloudflare R2:
+  `https://<account-id>.r2.cloudflarestorage.com`
+- `S3_ACCESS_KEY_ID`
+- `S3_SECRET_ACCESS_KEY`
+- `S3_REGION` — optional, defaults to `auto` (correct for R2; set a real AWS
+  region only when pointing at actual S3)
+
+Leave all four unset locally and Media keeps using local disk exactly as
+before — verified by reading the plugin's own source: with no config
+present the plugin resolves to a no-op that returns Payload's config
+untouched, no S3 client is ever constructed. Cloudflare R2 is this
+project's target provider (it's S3-compatible, so `@payloadcms/storage-s3`
+talks to it directly with `forcePathStyle: true`), but the same code path
+works against real AWS S3 or any other S3-compatible endpoint without
+changes — only the env vars differ.
+
+**Not yet live-tested against a real bucket** — no R2/S3 credentials were
+available in the environment this was built in. The plugin wiring is
+code-ready and the local (disabled) path is verified working, but treat the
+enabled path as unverified until it's run against a real bucket once.
+
+To set this up: create an R2 bucket and an API token scoped to it in the
+Cloudflare dashboard, then set the four env vars above in your production
+environment (never in a committed file).
 
 ### Environment variables in production
 

@@ -4,6 +4,7 @@ import sharp from "sharp";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { postgresAdapter } from "@payloadcms/db-postgres";
+import { s3Storage } from "@payloadcms/storage-s3";
 import { buildConfig } from "payload";
 
 import { Users } from "./collections/Users";
@@ -57,6 +58,48 @@ const db = isPostgres
     });
 
 /**
+ * LOCAL: Media.staticDir (local disk) — untouched, zero setup. PRODUCTION:
+ * any S3-compatible object store (Cloudflare R2 is the target — see
+ * README — but this works unmodified against real AWS S3 or any other
+ * S3-compatible endpoint too), selected the same way the DB adapter is:
+ * by whether the required env vars are actually present, not a separate
+ * flag to keep in sync.
+ *
+ * When S3_BUCKET/S3_ENDPOINT/S3_ACCESS_KEY_ID/S3_SECRET_ACCESS_KEY are
+ * unset (every local dev environment), `enabled: false` makes this
+ * plugin a verified no-op — it returns Payload's config completely
+ * unmodified (confirmed by reading @payloadcms/storage-s3's and
+ * @payloadcms/plugin-cloud-storage's source directly, not assumed): no
+ * S3 client is constructed, no network call is attempted, and
+ * Media.upload.staticDir keeps working exactly as before. Only a real
+ * production environment with these four vars set actually switches
+ * Media's storage.
+ */
+const hasS3Config = Boolean(
+  process.env.S3_BUCKET &&
+    process.env.S3_ENDPOINT &&
+    process.env.S3_ACCESS_KEY_ID &&
+    process.env.S3_SECRET_ACCESS_KEY
+);
+
+const mediaStorage = s3Storage({
+  enabled: hasS3Config,
+  collections: { media: true },
+  bucket: process.env.S3_BUCKET || "",
+  config: {
+    region: process.env.S3_REGION || "auto",
+    endpoint: process.env.S3_ENDPOINT,
+    credentials: {
+      accessKeyId: process.env.S3_ACCESS_KEY_ID || "",
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || "",
+    },
+    // R2 (and most non-AWS S3-compatible stores) need path-style URLs,
+    // not AWS's virtual-hosted-style — harmless against real AWS S3 too.
+    forcePathStyle: true,
+  },
+});
+
+/**
  * Payload owns data/auth/media only — it never renders anything a
  * visitor sees. The public site's React/R3F/GSAP experience layer
  * consumes this through a plain adapter (lib/payload/*, Milestone 11),
@@ -83,4 +126,5 @@ export default buildConfig({
   },
   db,
   sharp,
+  plugins: [mediaStorage],
 });
