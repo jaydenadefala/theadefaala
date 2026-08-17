@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import DevSystemGrid from "@/components/DevSystemGrid";
 import { getDevelopmentProjects, getProjectsByCategory } from "@/lib/payload/development";
+import { getSiteSettings } from "@/lib/payload/settings";
 import { buildMetadata } from "@/lib/seo";
 import { pickFeatured } from "@/lib/payload/featured";
 import styles from "./development.module.css";
@@ -27,16 +28,17 @@ const PRINCIPLES = [
 export const revalidate = 60;
 
 export default async function DevelopmentPage() {
-  const [webProjects, businessProjects] = await Promise.all([
+  const [webProjects, businessProjects, { siteTitle }] = await Promise.all([
     getProjectsByCategory("Web"),
     getProjectsByCategory("Business"),
+    getSiteSettings(),
   ]);
 
   return (
     <main className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.wordmark}>
-          theAdefala
+          {siteTitle}
         </Link>
         <Link href="/#development" className={styles.back}>
           ← Back to the story

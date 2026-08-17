@@ -4,6 +4,7 @@ import Scene from "@/components/three/Scene";
 import WritingGalleryScene from "@/components/three/writing/WritingGalleryScene";
 import WritingGalleryFallback from "./WritingGalleryFallback";
 import { getWritingPieces } from "@/lib/payload/writing";
+import { getSiteSettings } from "@/lib/payload/settings";
 import { buildMetadata } from "@/lib/seo";
 import { pickFeatured } from "@/lib/payload/featured";
 import styles from "./writing.module.css";
@@ -22,13 +23,16 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 60;
 
 export default async function WritingPage() {
-  const pieces = await getWritingPieces();
+  const [pieces, { siteTitle }] = await Promise.all([
+    getWritingPieces(),
+    getSiteSettings(),
+  ]);
 
   return (
     <main className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.wordmark}>
-          theAdefala
+          {siteTitle}
         </Link>
         <Link href="/#writing" className={styles.back}>
           ← Back to the story

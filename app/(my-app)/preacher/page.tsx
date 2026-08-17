@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getMessages } from "@/lib/payload/preacher";
+import { getSiteSettings } from "@/lib/payload/settings";
 import { buildMetadata } from "@/lib/seo";
 import { pickFeatured } from "@/lib/payload/featured";
 import PreacherList from "./PreacherList";
@@ -20,7 +21,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 60;
 
 export default async function PreacherPage() {
-  const messages = await getMessages();
+  const [messages, { siteTitle }] = await Promise.all([
+    getMessages(),
+    getSiteSettings(),
+  ]);
   const sorted = [...messages].sort(
     (a, b) => a.displayOrder - b.displayOrder
   );
@@ -29,7 +33,7 @@ export default async function PreacherPage() {
     <main className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.wordmark}>
-          theAdefala
+          {siteTitle}
         </Link>
         <Link href="/#preacher" className={styles.back}>
           ← Back to the story

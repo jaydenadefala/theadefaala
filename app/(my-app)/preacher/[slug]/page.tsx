@@ -6,6 +6,7 @@ import {
   getMessage,
   getAdjacentMessages,
 } from "@/lib/payload/preacher";
+import { getSiteSettings } from "@/lib/payload/settings";
 import { buildMetadata } from "@/lib/seo";
 import AudioPlayer from "@/components/AudioPlayer";
 import styles from "./preacher-detail.module.css";
@@ -41,13 +42,16 @@ export default async function PreacherDetailPage({ params }: PageProps) {
   const message = await getMessage(slug);
   if (!message) notFound();
 
-  const { prev, next } = await getAdjacentMessages(slug);
+  const [{ prev, next }, { siteTitle }] = await Promise.all([
+    getAdjacentMessages(slug),
+    getSiteSettings(),
+  ]);
 
   return (
     <main className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.wordmark}>
-          theAdefala
+          {siteTitle}
         </Link>
         <Link href="/preacher" className={styles.back}>
           ← Back to preacher

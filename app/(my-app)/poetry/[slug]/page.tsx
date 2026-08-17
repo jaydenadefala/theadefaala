@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MOOD_STYLES } from "@/content/poetry";
 import { getPoems, getPoem, getAdjacentPoems } from "@/lib/payload/poems";
+import { getSiteSettings } from "@/lib/payload/settings";
 import { buildMetadata } from "@/lib/seo";
 import AudioPlayer from "@/components/AudioPlayer";
 import styles from "./poetry-detail.module.css";
@@ -39,7 +40,10 @@ export default async function PoemDetailPage({ params }: PageProps) {
   if (!poem) notFound();
 
   const mood = MOOD_STYLES[poem.mood];
-  const { prev, next } = await getAdjacentPoems(slug);
+  const [{ prev, next }, { siteTitle }] = await Promise.all([
+    getAdjacentPoems(slug),
+    getSiteSettings(),
+  ]);
 
   return (
     <main
@@ -63,7 +67,7 @@ export default async function PoemDetailPage({ params }: PageProps) {
 
       <header className={styles.header}>
         <Link href="/" className={styles.wordmark}>
-          theAdefala
+          {siteTitle}
         </Link>
         <Link href="/poetry" className={styles.back}>
           ← Back to poetry

@@ -17,13 +17,13 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 60;
 
 export default async function ConnectPage() {
-  const { email } = await getSiteSettings();
+  const { email, siteTitle } = await getSiteSettings();
 
   return (
     <main className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.wordmark}>
-          theAdefala
+          {siteTitle}
         </Link>
         <Link href="/#connect" className={styles.back}>
           ← Back to the story

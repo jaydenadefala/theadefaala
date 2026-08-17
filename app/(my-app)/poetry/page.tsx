@@ -4,6 +4,7 @@ import Scene from "@/components/three/Scene";
 import PoetryGalleryScene from "@/components/three/poetry/PoetryGalleryScene";
 import PoetryGalleryFallback from "./PoetryGalleryFallback";
 import { getPoems } from "@/lib/payload/poems";
+import { getSiteSettings } from "@/lib/payload/settings";
 import { buildMetadata } from "@/lib/seo";
 import { pickFeatured } from "@/lib/payload/featured";
 import styles from "./poetry.module.css";
@@ -21,13 +22,13 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 60;
 
 export default async function PoetryPage() {
-  const poems = await getPoems();
+  const [poems, { siteTitle }] = await Promise.all([getPoems(), getSiteSettings()]);
 
   return (
     <main className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.wordmark}>
-          theAdefala
+          {siteTitle}
         </Link>
         <Link href="/#poetry" className={styles.back}>
           ← Back to the story

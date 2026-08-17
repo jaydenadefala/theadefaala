@@ -6,6 +6,7 @@ import {
   getWritingPiece,
   getAdjacentWritingPieces,
 } from "@/lib/payload/writing";
+import { getSiteSettings } from "@/lib/payload/settings";
 import { buildMetadata } from "@/lib/seo";
 import styles from "./writing-detail.module.css";
 
@@ -40,13 +41,16 @@ export default async function WritingDetailPage({ params }: PageProps) {
   const piece = await getWritingPiece(slug);
   if (!piece) notFound();
 
-  const { prev, next } = await getAdjacentWritingPieces(slug);
+  const [{ prev, next }, { siteTitle }] = await Promise.all([
+    getAdjacentWritingPieces(slug),
+    getSiteSettings(),
+  ]);
 
   return (
     <main className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.wordmark}>
-          theAdefala
+          {siteTitle}
         </Link>
         <Link href="/writing" className={styles.back}>
           ← Back to writing

@@ -6,6 +6,7 @@ import {
   getProject,
   getAdjacentProjects,
 } from "@/lib/payload/development";
+import { getSiteSettings } from "@/lib/payload/settings";
 import { buildMetadata } from "@/lib/seo";
 import styles from "./development-detail.module.css";
 
@@ -40,13 +41,16 @@ export default async function DevelopmentDetailPage({ params }: PageProps) {
   const project = await getProject(slug);
   if (!project) notFound();
 
-  const { prev, next } = await getAdjacentProjects(slug);
+  const [{ prev, next }, { siteTitle }] = await Promise.all([
+    getAdjacentProjects(slug),
+    getSiteSettings(),
+  ]);
 
   return (
     <main className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.wordmark}>
-          theAdefala
+          {siteTitle}
         </Link>
         <Link href="/development" className={styles.back}>
           ← Back to development
