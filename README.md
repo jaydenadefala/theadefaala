@@ -1,36 +1,151 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# theAdefala
 
-## Getting Started
+The personal site of theAdefala — developer, writer, poet, and preacher. A
+cinematic, spatial (Three.js / React Three Fiber) identity experience across
+four content verticals (Writing, Poetry, Development, Preacher), backed by a
+self-hosted [Payload CMS](https://payloadcms.com) so every piece of content
+is editable through an admin UI, not a code change.
 
-First, run the development server:
+Built on Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind
+CSS 4, GSAP, and React Three Fiber.
+
+## Local setup
 
 ```bash
+npm install
+cp .env.example .env.local   # then fill in PAYLOAD_SECRET (see below)
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). The public site loads
+immediately; `/admin` is the Payload admin panel.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Required environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+See `.env.example` for the full list with descriptions. The two that matter
+locally:
 
-## Learn More
+- `PAYLOAD_SECRET` — any long random string, e.g. `openssl rand -base64 32`.
+  Signs admin auth sessions. Generate a fresh one per environment; never
+  reuse the same value between local/staging/production.
+- `DATABASE_URL` — defaults to `file:./payload.db` (SQLite) if unset, which
+  is fine for local dev.
 
-To learn more about Next.js, take a look at the following resources:
+### Development database (SQLite)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Local dev uses SQLite (`@payloadcms/db-sqlite`) — zero setup, just a file on
+disk (`payload.db`, gitignored). The first time you run the app, Payload
+creates the file and schema automatically.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**After editing any collection's or global's fields** (adding/removing a
+field in `collections/*.ts` or `globals/*.ts`), run:
 
-## Deploy on Vercel
+```bash
+npm run db:push
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This pushes the schema change to your local SQLite database. It's a
+separate manual step — not automatic on every `npm run dev` — because
+Payload's automatic dev-mode schema push has a known, reproducible bug in
+this stack (drizzle-kit's SQLite diff logic; see the comment above `db:push`
+in `scripts/push-schema.ts` and in `payload.config.ts` for the full
+explanation). `db:push` sets `PAYLOAD_PUSH_SCHEMA=true` for that one run
+only, so normal `dev`/`build` runs never hit the bug.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To seed the four content collections with their initial (honestly
+draft/placeholder) records:
+
+```bash
+npm run seed
+```
+
+`seed` is idempotent — safe to re-run, it skips any record whose slug
+already exists.
+
+### Payload admin setup
+
+The first admin account is **never created by a script** — do this yourself,
+by design (nothing in this repo can create an account for you):
+
+1. `npm run dev`
+2. Visit `http://localhost:3000/admin`
+3. Payload's first-run screen prompts you to create the initial admin user
+   (email + password).
+
+From there, everything — Writing, Poetry, Development projects, Preacher
+messages, Media, and the two site-wide settings globals (Site Settings,
+Homepage Settings) — is manageable entirely through that admin UI. No
+content in this project should ever require a code change or a redeploy to
+add/edit/publish.
+
+### Build
+
+```bash
+npm run build   # production build
+npm run start   # serve the production build
+npm run lint       # ESLint
+npm run typecheck  # tsc, standalone (also runs as part of `build`)
+```
+
+All three (`build`, `lint`, `typecheck`) are expected to pass with zero
+errors before merging/deploying.
+
+## Deployment notes
+
+### Production database: PostgreSQL required
+
+**SQLite is a local development convenience only — not a production
+persistence strategy.** A deployed filesystem (most serverless/container
+hosts) is ephemeral or not safely shared across instances, so a SQLite file
+written to disk in production will not reliably persist.
+
+The database adapter in `payload.config.ts` is selected automatically from
+`DATABASE_URL`'s scheme — no other code change needed:
+
+- `file:...` → SQLite (`@payloadcms/db-sqlite`) — local dev.
+- `postgres://...` or `postgresql://...` → PostgreSQL
+  (`@payloadcms/db-postgres`) — production.
+
+Every collection/global field is defined through Payload's own schema DSL
+(never raw SQL), which is what makes this a one-variable swap rather than a
+rewrite. In production, set `DATABASE_URL` to a real Postgres connection
+string (Neon, Supabase, Railway, RDS, etc. all work — any standard Postgres
+connection string), then run Payload's migration flow for that database
+before first boot.
+
+**Not yet live-tested against a real Postgres instance** — no Postgres
+server was available in the environment this was built in. The code path
+compiles and type-checks cleanly and mirrors the SQLite adapter's shape
+exactly, but treat it as code-ready, not yet verified end-to-end, until
+someone runs it against a real Postgres database once.
+
+### Media storage
+
+Uploads (`collections/Media.ts`) currently write to local disk
+(`upload.staticDir: "media"`, gitignored). Like SQLite, this works for local
+dev but **is not durable on most production hosts** — local disk writes on
+serverless/ephemeral-filesystem platforms will not persist or will not be
+shared across instances. Before a real deployment, `Media`'s `upload` config
+needs a cloud storage adapter (Payload supports S3, Vercel Blob, Google
+Cloud Storage, and others via `@payloadcms/storage-*` packages) instead of
+`staticDir`. Not yet implemented — flagging as a real pre-deployment
+requirement, not a nice-to-have.
+
+### Environment variables in production
+
+- `PAYLOAD_SECRET` — a fresh, long random value, different from local/dev.
+- `DATABASE_URL` — a real `postgres://` connection string.
+- `NEXT_PUBLIC_SITE_URL` — the real public origin (used for
+  sitemap/robots/canonical URLs and Open Graph absolute image URLs).
+- `PAYLOAD_PUSH_SCHEMA` — leave unset/`false`. Use Payload's proper
+  migration commands for schema changes against a production Postgres
+  database instead.
+
+### Admin authentication
+
+Payload's own session-based auth — no custom/fake auth layer anywhere in
+this codebase. Every collection and global has explicit, server-enforced
+`access` rules (not client-side-only); public read is intentional
+(including drafts, so "coming soon" pages work without auth) while
+create/update/delete require an authenticated session on every content
+collection and global.
