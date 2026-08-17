@@ -13,8 +13,8 @@ export const DEFAULT_ROLES = ["Developer", "Writer", "Poet", "Preacher"];
 interface IdentityOverlayProps {
   name: string;
   roles: string[];
-  letterRefs: RefObject<HTMLSpanElement[]>;
-  labelRefs: RefObject<HTMLLIElement[]>;
+  letterRefs: RefObject<(HTMLSpanElement | null)[]>;
+  labelRefs: RefObject<(HTMLLIElement | null)[]>;
   cursorRef: RefObject<HTMLSpanElement | null>;
 }
 
@@ -33,10 +33,6 @@ export function IdentityOverlay({
   labelRefs,
   cursorRef,
 }: IdentityOverlayProps) {
-  // Reset each render — callback refs below repopulate in DOM order.
-  letterRefs.current = [];
-  labelRefs.current = [];
-
   return (
     <div className={styles.identity}>
       <h1 className={styles.name}>
@@ -46,7 +42,10 @@ export function IdentityOverlay({
               key={i}
               className={styles.letter}
               ref={(el) => {
-                if (el) letterRefs.current.push(el);
+                letterRefs.current[i] = el;
+                return () => {
+                  letterRefs.current[i] = null;
+                };
               }}
             >
               {char === " " ? " " : char}
@@ -71,12 +70,15 @@ export function IdentityOverlay({
       </h1>
 
       <ul className={styles.labels}>
-        {roles.map((role) => (
+        {roles.map((role, i) => (
           <li
             key={role}
             className={styles.label}
             ref={(el) => {
-              if (el) labelRefs.current.push(el);
+              labelRefs.current[i] = el;
+              return () => {
+                labelRefs.current[i] = null;
+              };
             }}
           >
             <span>{role}</span>

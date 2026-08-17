@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import type { Points } from "three";
 
@@ -32,7 +32,13 @@ export default function ParticleField({
 }: ParticleFieldProps) {
   const pointsRef = useRef<Points>(null);
 
-  const positions = useMemo(() => {
+  // Lazy useState initializer, not useMemo: every call site passes
+  // static literal props (count/spread/depthRange never change after
+  // mount), and React's own guidance is explicit that Math.random()
+  // belongs in a lazy initializer, not a memo — useMemo callbacks are
+  // still expected to be pure, and aren't guaranteed to run exactly
+  // once, while a useState initializer is.
+  const [positions] = useState(() => {
     const [near, far] = depthRange;
     const depthSpan = far - near;
     const arr = new Float32Array(count * 3);
@@ -42,8 +48,7 @@ export default function ParticleField({
       arr[i * 3 + 2] = near + Math.random() * depthSpan;
     }
     return arr;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count, spread.x, spread.y, depthRange[0], depthRange[1]]);
+  });
 
   useFrame(({ clock }) => {
     if (pointsRef.current) {

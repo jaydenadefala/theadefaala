@@ -1,7 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import { gsap } from "gsap";
 import * as THREE from "three";
@@ -50,12 +50,13 @@ interface OpeningSceneR3FProps {
 }
 
 export default function OpeningSceneR3F({ name, roles }: OpeningSceneR3FProps) {
-  const [isDesktop, setIsDesktop] = useState(false);
+  // Lazy initializer, not useState+useEffect: this component is only
+  // ever mounted client-side (it's a child of Scene's ssr:false
+  // dynamic import — see components/three/Scene.tsx), so there's no
+  // server-rendered version to hydration-mismatch against. Reading
+  // window immediately on first (guaranteed-client) render is safe.
+  const [isDesktop] = useState(() => window.matchMedia(DESKTOP_QUERY).matches);
   const [settled, setSettled] = useState(false);
-
-  useLayoutEffect(() => {
-    setIsDesktop(window.matchMedia(DESKTOP_QUERY).matches);
-  }, []);
 
   const texture = usePhotoTexture(PHOTO_SRC);
   const glowTexture = useMemo(() => makeGlowTexture(), []);
@@ -69,8 +70,8 @@ export default function OpeningSceneR3F({ name, roles }: OpeningSceneR3FProps) {
 
   const cursorRef = useRef<HTMLSpanElement>(null);
   const scrollCueRef = useRef<HTMLDivElement>(null);
-  const letterRefs = useRef<HTMLSpanElement[]>([]);
-  const labelRefs = useRef<HTMLLIElement[]>([]);
+  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const labelRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   // Idle wobble only takes over rotation *after* the GSAP timeline has
   // finished with these objects — no property ownership conflict.

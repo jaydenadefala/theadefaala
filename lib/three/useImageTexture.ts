@@ -5,6 +5,12 @@ import * as THREE from "three";
 
 const cache = new Map<string, THREE.Texture>();
 
+interface LoadedTexture {
+  src: string;
+  aspect: number;
+  texture: THREE.Texture;
+}
+
 /**
  * Loads an arbitrary uploaded image (any aspect ratio) and crops it
  * onto a canvas sized to match a target aspect ratio — the same
@@ -23,20 +29,16 @@ export function useImageTexture(
   src: string | null | undefined,
   aspect: number
 ): THREE.Texture | null {
-  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+  const [loaded, setLoaded] = useState<LoadedTexture | null>(null);
+
+  // Reading the cache is a pure, deterministic lookup given the same
+  // key — safe to do directly during render, no effect/state round
+  // trip needed for the (common, after the first load) cache-hit path.
+  const cacheKey = src ? `${src}|${aspect}` : null;
+  const cachedTexture = cacheKey ? cache.get(cacheKey) : undefined;
 
   useEffect(() => {
-    if (!src) {
-      setTexture(null);
-      return;
-    }
-
-    const cacheKey = `${src}|${aspect}`;
-    const cached = cache.get(cacheKey);
-    if (cached) {
-      setTexture(cached);
-      return;
-    }
+    if (!src || cachedTexture) return;
 
     let cancelled = false;
     const img = new Image();
@@ -71,14 +73,14 @@ export function useImageTexture(
         ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
       }
 
-      const loaded = new THREE.CanvasTexture(canvas);
-      loaded.colorSpace = THREE.SRGBColorSpace;
-      cache.set(cacheKey, loaded);
-      setTexture(loaded);
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      cache.set(cacheKey!, texture);
+      setLoaded({ src, aspect, texture });
     };
 
     img.onerror = () => {
-      if (!cancelled) setTexture(null);
+      if (!cancelled) setLoaded(null);
     };
 
     img.src = src;
@@ -86,7 +88,16 @@ export function useImageTexture(
     return () => {
       cancelled = true;
     };
-  }, [src, aspect]);
+  }, [src, aspect, cachedTexture, cacheKey]);
 
-  return texture;
+  if (cachedTexture) return cachedTexture;
+
+  // Derived, not effect-reset: only return the loaded texture if it
+  // actually matches the CURRENT src/aspect. Naturally falls back to
+  // null the instant src changes (no stale-texture flash while the
+  // new load is in flight), without a separate synchronous
+  // setState(null) call in the effect body for the "no src" case.
+  return loaded && loaded.src === src && loaded.aspect === aspect
+    ? loaded.texture
+    : null;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import ParticleField from "@/components/three/ParticleField";
 import WritingCard from "./WritingCard";
@@ -32,14 +32,17 @@ function useConstellationLayout(count: number) {
 function CameraParallax() {
   const pointer = useRef({ x: 0, y: 0 });
 
-  useMemo(() => {
+  // useLayoutEffect, not useMemo: a subscribe/cleanup side effect has
+  // no business in useMemo (its cleanup-via-return isn't a documented,
+  // guaranteed React API — this only ever "worked" by implementation
+  // accident). This is a real bug fix, not a lint-satisfying reshuffle.
+  useLayoutEffect(() => {
     const onMove = (e: PointerEvent) => {
       pointer.current.x = e.clientX / window.innerWidth - 0.5;
       pointer.current.y = e.clientY / window.innerHeight - 0.5;
     };
     window.addEventListener("pointermove", onMove);
     return () => window.removeEventListener("pointermove", onMove);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useFrame(({ camera }) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, type ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import { gsap } from "gsap";
@@ -89,12 +89,16 @@ export default function SceneObject({
 }: SceneObjectProps) {
   const innerRef = useRef<THREE.Group>(null);
   const materialRef = useRef<THREE.MeshBasicMaterial>(null);
-  const idleOffset = useRef(Math.random() * Math.PI * 2);
+  // Lazy useState initializer, not useRef(Math.random()...): a plain
+  // useRef re-evaluates its argument expression on every render (only
+  // the first result is ever used, but Math.random() still runs every
+  // time) — React's guidance is a lazy initializer for exactly this.
+  const [idleOffset] = useState(() => Math.random() * Math.PI * 2);
   const idleEnabledRef = useRef(idleSpeed > 0);
 
   useFrame(({ clock }) => {
     if (idleSpeed <= 0 || !innerRef.current || !idleEnabledRef.current) return;
-    const t = clock.elapsedTime * idleSpeed + idleOffset.current;
+    const t = clock.elapsedTime * idleSpeed + idleOffset;
     innerRef.current.position.y = Math.sin(t) * idleAmplitude;
     innerRef.current.rotation.y = Math.sin(t * 0.6) * (idleAmplitude * 0.5);
   });

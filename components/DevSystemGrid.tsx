@@ -14,9 +14,7 @@ interface DevSystemGridProps {
 export default function DevSystemGrid({ label, projects }: DevSystemGridProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<HTMLDivElement[]>([]);
-
-  itemRefs.current = [];
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useScrollReveal(sectionRef, [labelRef], { duration: 0.7 });
   useScrollReveal(sectionRef, itemRefs, {
@@ -33,12 +31,15 @@ export default function DevSystemGrid({ label, projects }: DevSystemGridProps) {
         {label}
       </div>
       <div className={styles.grid}>
-        {projects.map((project) => (
+        {projects.map((project, i) => (
           <div
             key={project.slug}
             className={styles.gridItem}
             ref={(el) => {
-              if (el) itemRefs.current.push(el);
+              itemRefs.current[i] = el;
+              return () => {
+                itemRefs.current[i] = null;
+              };
             }}
           >
             <DevSystemCard project={project} />

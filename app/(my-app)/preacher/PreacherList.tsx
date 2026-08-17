@@ -18,9 +18,7 @@ interface PreacherListProps {
  */
 export default function PreacherList({ messages }: PreacherListProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const itemRefs = useRef<HTMLAnchorElement[]>([]);
-
-  itemRefs.current = [];
+  const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   useScrollReveal(sectionRef, itemRefs, {
     y: 0,
@@ -35,13 +33,16 @@ export default function PreacherList({ messages }: PreacherListProps) {
       className={styles.list}
       aria-label="Messages and reflections"
     >
-      {messages.map((message) => (
+      {messages.map((message, i) => (
         <Link
           key={message.slug}
           href={`/preacher/${message.slug}`}
           className={styles.entry}
           ref={(el) => {
-            if (el) itemRefs.current.push(el);
+            itemRefs.current[i] = el;
+            return () => {
+              itemRefs.current[i] = null;
+            };
           }}
         >
           {message.coverImage && (

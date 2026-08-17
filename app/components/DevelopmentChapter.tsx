@@ -30,10 +30,8 @@ export default function DevelopmentChapter({ project }: DevelopmentChapterProps)
   const sectionRef = useRef<HTMLElement>(null);
   const kickerRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
-  const cardRefs = useRef<HTMLDivElement[]>([]);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const footerRef = useRef<HTMLDivElement>(null);
-
-  cardRefs.current = [];
 
   useChapterRecede(sectionRef);
 
@@ -72,12 +70,15 @@ export default function DevelopmentChapter({ project }: DevelopmentChapterProps)
       </div>
 
       <div className={styles.grid}>
-        {TRACKS.map((track) => (
+        {TRACKS.map((track, i) => (
           <div
             key={track.label}
             className={styles.card}
             ref={(el) => {
-              if (el) cardRefs.current.push(el);
+              cardRefs.current[i] = el;
+              return () => {
+                cardRefs.current[i] = null;
+              };
             }}
           >
             <span className={styles.cardLabel}>{track.label}</span>

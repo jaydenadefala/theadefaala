@@ -28,8 +28,8 @@ export default function OpeningSceneFallback({
   const photoWrapRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLSpanElement>(null);
   const scrollCueRef = useRef<HTMLDivElement>(null);
-  const letterRefs = useRef<HTMLSpanElement[]>([]);
-  const labelRefs = useRef<HTMLLIElement[]>([]);
+  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const labelRefs = useRef<(HTMLLIElement | null)[]>([]);
   // Checked out-of-band (not via <img onError>): the SSR-rendered <img> starts
   // fetching before hydration attaches listeners, so a fast local 404 can
   // fire and be missed. A plain Image() probe below is race-free.

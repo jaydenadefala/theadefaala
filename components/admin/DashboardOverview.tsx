@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getPayload } from "payload";
 import config from "@payload-config";
 
@@ -64,23 +65,23 @@ export async function DashboardOverview() {
         {CONTENT_SECTIONS.map((section, i) => {
           const counts = sectionCounts[i];
           return (
-            <a key={section.slug} href={section.href} className="ta-dashboard__card">
+            <Link key={section.slug} href={section.href} className="ta-dashboard__card">
               <span className="ta-dashboard__cardLabel">{section.label}</span>
               <span className="ta-dashboard__cardCount">{counts.total}</span>
               <span className="ta-dashboard__cardBreakdown">
                 {counts.published} published · {counts.drafts} draft
               </span>
-            </a>
+            </Link>
           );
         })}
-        <a href="/admin/collections/media" className="ta-dashboard__card">
+        <Link href="/admin/collections/media" className="ta-dashboard__card">
           <span className="ta-dashboard__cardLabel">Media</span>
           <span className="ta-dashboard__cardCount">{mediaCount.totalDocs}</span>
-        </a>
+        </Link>
       </div>
       <div className="ta-dashboard__quickLinks">
-        <a href="/admin/globals/site-settings">Site Settings</a>
-        <a href="/admin/globals/homepage-settings">Homepage Settings</a>
+        <Link href="/admin/globals/site-settings">Site Settings</Link>
+        <Link href="/admin/globals/homepage-settings">Homepage Settings</Link>
       </div>
     </div>
   );

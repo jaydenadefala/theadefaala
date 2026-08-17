@@ -31,6 +31,17 @@ export default function Scene({ children, fallback, className, style }: ScenePro
   const [webglOk, setWebglOk] = useState<boolean | null>(null);
 
   useEffect(() => {
+    // Intentional exception, not a lint suppression of convenience:
+    // this MUST run in an effect, not a lazy useState initializer.
+    // Scene is server-rendered (SSR renders the fallback, since
+    // webglOk starts null), and hydration requires the client's FIRST
+    // render to match that exactly. A lazy initializer would compute
+    // the real WebGL result immediately on the client's first render
+    // pass, mismatching the server-rendered fallback HTML and
+    // triggering a hydration error. Deferring to an effect (which only
+    // runs after hydration completes) is what makes the fallback-first
+    // contract in the comment above actually hold.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setWebglOk(supportsWebGL());
   }, []);
 
