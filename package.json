@@ -13,7 +13,10 @@
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
     "seed": "tsx scripts/seed.ts",
-    "db:push": "tsx scripts/push-schema.ts"
+    "db:push": "tsx scripts/push-schema.ts",
+    "migrate:create": "tsx scripts/migrate.ts migrate:create",
+    "migrate": "tsx scripts/migrate.ts migrate",
+    "migrate:status": "tsx scripts/migrate.ts migrate:status"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.88.0",

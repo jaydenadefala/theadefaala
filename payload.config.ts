@@ -41,6 +41,27 @@ const isPostgres =
 const db = isPostgres
   ? postgresAdapter({
       pool: { connectionString: databaseUrl },
+      // Discovered live against a real Neon database, not assumed:
+      // @payloadcms/db-postgres's connect() only skips dev-mode auto
+      // schema push when NODE_ENV === 'production' AND push !== false
+      // (see node_modules/@payloadcms/db-postgres/dist/connect.js) —
+      // `next dev` never sets NODE_ENV=production, so without this
+      // flag, pointing DATABASE_URL at Neon and running `npm run dev`
+      // (or any local script) would trigger drizzle-kit's schema
+      // introspection/diff against Neon on every connect. That's the
+      // same class of bug already worked around for SQLite below, but
+      // worse here: Neon is the real, persistent, shared database, and
+      // an uncontrolled auto-diff against it is exactly what the
+      // project's migration workflow (migrations/, `payload migrate`)
+      // exists to prevent. Confirmed live: with this unset, a plain
+      // Payload local-API script against Neon hung ~90s introspecting
+      // the schema, then crashed with an uncaught "Connection
+      // terminated unexpectedly" — almost certainly drizzle-kit's
+      // introspection colliding with Neon's pooled (pgbouncer) endpoint.
+      // Schema changes on Postgres always go through the formal
+      // migration commands now: `npm run payload migrate:create <name>`
+      // then `npm run payload migrate` — never auto-push.
+      push: false,
     })
   : sqliteAdapter({
       client: { url: databaseUrl },
